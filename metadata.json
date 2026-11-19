@@ -1,0 +1,6 @@
+{
+  "name": "GitStart",
+  "description": "An artisanal, calm approach to version control literacy. Learn GitHub step by step without intimidation.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
