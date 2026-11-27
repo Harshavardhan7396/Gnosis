@@ -13,7 +13,8 @@ interface TopBarProps {
     | 'stuck'
     | 'cheat-sheet'
     | 'feedback'
-    | 'translate-admin';
+    | 'translate-admin'
+    | 'finished';
   lessons: Lesson[];
   activeLessonIndex: number;
   completedLessonsCount: number;

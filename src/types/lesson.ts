@@ -274,7 +274,10 @@ export interface ConceptLessonContent {
       | 'dashboard-map'
       | 'repo-box'
       | 'commit-checkpoints'
-      | 'pull-request-flow';
+      | 'pull-request-flow'
+      | 'issue-flow'
+      | 'fork-clone-flow'
+      | 'staging-flow';
     nodes: ConceptDiagramNode[];
     caption: string;
   };
@@ -289,11 +292,24 @@ export interface ConceptLessonContent {
       | 'dashboard'
       | 'repo-page'
       | 'commit-history'
-      | 'pull-request-flow';
+      | 'pull-request-flow'
+      | 'issues-page'
+      | 'fork-clone-page'
+      | 'agents-page';
     screenshotSrc?: string;
     screenshotAlt?: string;
     screenshotCaption?: string;
+    screenshotsNote?: string;
     screenshots?: LessonScreenshot[];
+    extraScreenshots?: LessonScreenshot[];
+    showStepList?: boolean;
+    commands?: Array<{
+      id?: string;
+      step?: string;
+      label: string;
+      command: string;
+      note?: string;
+    }>;
     markers: ConceptWhereMarker[];
   };
   secondaryWhere?: {
@@ -311,10 +327,21 @@ export interface ConceptLessonContent {
     title: string;
     text: string;
   };
+  tip?: {
+    eyebrow: string;
+    title: string;
+    text: string;
+    codeSnippet?: string;
+    copyable?: boolean;
+  };
   commonMistake: {
     eyebrow: string;
     title: string;
     text: string;
+    items?: Array<{
+      title: string;
+      text: string;
+    }>;
     screenshot?: LessonScreenshot;
   };
 }
@@ -331,6 +358,7 @@ export interface Lesson {
   slug: string;
   levelId: string;
   comingSoon?: boolean;
+  unlockWithLevel?: boolean;
   kind: 'concept' | 'tutorial';
   cardTitle: string;
   cardDescription: string;
@@ -384,7 +412,47 @@ export type StuckScreenType =
   | 'find-repo'
   | 'pr-no-banner'
   | 'pr-nothing-to-compare'
-  | 'pr-merge-disabled';
+  | 'pr-merge-disabled'
+  | 'issues-tab-missing'
+  | 'issue-assign-someone'
+  | 'issue-closed-mistake'
+  | 'fork-button-missing'
+  | 'fork-own-repo'
+  | 'fork-already-exists'
+  | 'settings-tab-missing'
+  | 'tab-missing'
+  | 'actions-no-runs'
+  | 'actions-red-cross'
+  | 'projects-cant-create'
+  | 'projects-cant-drag'
+  | 'wiki-tab-missing'
+  | 'wiki-not-in-files'
+  | 'security-tab-missing'
+  | 'security-dependabot-disabled'
+  | 'insights-community-discussions'
+  | 'insights-dependency-disabled'
+  | 'settings-cant-see'
+  | 'agents-upgrade-page'
+  | 'agents-tab-missing'
+  | 'release-cant-find-create'
+  | 'release-publish-greyed'
+  | 'release-attach-binaries'
+  | 'pages-404-error'
+  | 'pages-cant-find-settings'
+  | 'gist-create-greyed'
+  | 'gist-delete'
+  | 'profile-readme-not-showing'
+  | 'profile-secret-message-missing'
+  | 'git-command-not-found'
+  | 'git-mac-developer-tools'
+  | 'git-repo-not-found'
+  | 'git-not-a-repo'
+  | 'git-nothing-to-commit'
+  | 'git-tell-me-who-you-are'
+  | 'git-auth-failed'
+  | 'git-everything-up-to-date'
+  | 'git-no-upstream-branch'
+  | 'git-installer-nothing-opened';
 
 export interface StuckFixStep {
   number: number;

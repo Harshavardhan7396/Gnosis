@@ -2,15 +2,21 @@ import { useState } from 'react';
 import {
   AlertCircle,
   BookOpen,
+  Check,
+  Copy,
+  Download,
   GitBranch,
+  GitFork,
   GitMerge,
   GitPullRequest,
   History,
   Menu,
   Search,
+  Terminal,
   User,
   FileText,
   Lock,
+  Lightbulb,
 } from 'lucide-react';
 import type { ConceptLessonContent } from '../types/lesson';
 import { AskAboutButton } from './AskAboutButton';
@@ -84,7 +90,9 @@ function WhereToFindMockup({
       {/* Screen Canvas with Numbered Markers */}
       <div
         className={`relative bg-surface-container-low/30 select-none overflow-hidden ${
-          whereToFind.screenType === 'pull-request-flow'
+          whereToFind.screenType === 'pull-request-flow' ||
+          whereToFind.screenType === 'issues-page' ||
+          whereToFind.screenType === 'fork-clone-page'
             ? 'h-80 sm:h-[340px] p-3 sm:p-4'
             : 'h-64 sm:h-72 p-4 sm:p-6'
         }`}
@@ -297,6 +305,158 @@ function WhereToFindMockup({
           </div>
         )}
 
+        {whereToFind.screenType === 'issues-page' && (
+          <div className="h-full rounded-lg bg-surface-container-lowest border border-outline-variant/35 p-2.5 sm:p-3 flex flex-col justify-between gap-2 text-[10px]">
+            {/* Top Bar: Code + Issues tab + New issue */}
+            <div className="flex items-center justify-between gap-2 pb-1.5 border-b border-surface-container-high">
+              <div className="flex items-center gap-3 min-w-0">
+                <span className="text-on-surface-variant">&lt;&gt; Code</span>
+                <span className="inline-flex items-center gap-1 font-medium text-primary border-b-2 border-primary pb-0.5 whitespace-nowrap">
+                  <AlertCircle className="w-3 h-3" />
+                  <span>Issues</span>
+                </span>
+                <span className="hidden sm:inline text-on-surface-variant">Pull requests</span>
+              </div>
+              <span className="px-2 py-0.5 rounded bg-secondary text-on-secondary font-medium whitespace-nowrap shrink-0">
+                New issue
+              </span>
+            </div>
+
+            {/* Open / Closed + search + Labels */}
+            <div className="rounded border border-outline-variant/40 bg-surface-container-low/60 px-2.5 py-1.5 flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2 font-medium">
+                <span className="text-on-surface">2 Open</span>
+                <span className="text-on-surface-variant">1 Closed</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <span className="px-1.5 py-0.5 rounded bg-primary-fixed/35 text-primary font-medium">
+                  bug
+                </span>
+                <span className="px-1.5 py-0.5 rounded border border-outline-variant/40 bg-surface-container-lowest text-on-surface-variant">
+                  documentation
+                </span>
+              </div>
+            </div>
+
+            {/* New issue form + Assignees / Labels */}
+            <div className="grid grid-cols-12 gap-2 flex-1 min-h-0">
+              <div className="col-span-7 rounded border border-outline-variant/35 p-2 flex flex-col justify-between bg-surface-container-low/20">
+                <div className="space-y-1">
+                  <div className="px-2 py-1 rounded border border-outline-variant/40 bg-surface-container-lowest text-on-surface font-medium truncate">
+                    Button is hard to see on mobile
+                  </div>
+                  <div className="px-2 py-1 rounded border border-outline-variant/30 bg-surface-container-lowest text-on-surface-variant truncate">
+                    Expected a bigger Add file button.
+                  </div>
+                </div>
+                <div className="pt-1">
+                  <span className="inline-block px-2.5 py-1 rounded bg-secondary text-on-secondary font-medium">
+                    Submit new issue
+                  </span>
+                </div>
+              </div>
+
+              <div className="col-span-5 rounded border border-outline-variant/35 p-2 flex flex-col justify-between bg-surface-container-low/20">
+                <div className="space-y-1">
+                  <div className="text-on-surface-variant font-medium">Assignees: @alex-dev</div>
+                  <div className="text-on-surface-variant">Labels: bug</div>
+                </div>
+                <div className="pt-1 flex justify-end">
+                  <span className="inline-block px-2 py-1 rounded border border-outline-variant/45 bg-surface-container-lowest text-on-surface font-medium">
+                    Close / Reopen issue
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {whereToFind.screenType === 'fork-clone-page' && (
+          <div className="h-full rounded-lg bg-surface-container-lowest border border-outline-variant/35 p-2.5 sm:p-3 flex flex-col justify-between gap-2 text-[10px]">
+            {/* Row 1: Original repository + Fork button */}
+            <div className="flex items-center justify-between gap-2 pb-1.5 border-b border-surface-container-high">
+              <div className="min-w-0">
+                <span className="font-mono text-on-surface-variant truncate block">
+                  <span className="text-primary font-medium">original-owner</span> / sample-project
+                </span>
+              </div>
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded border border-outline-variant/45 bg-surface-container-low text-on-surface font-medium whitespace-nowrap shrink-0">
+                <GitFork className="w-3 h-3 text-primary" />
+                <span>Fork 12</span>
+              </span>
+            </div>
+
+            {/* Row 2: Create fork bar */}
+            <div className="rounded border border-outline-variant/40 bg-surface-container-low/60 px-2.5 py-1.5 flex items-center justify-between gap-2">
+              <span className="text-on-surface-variant truncate">
+                Owner: <span className="font-mono text-on-surface">your-username</span> · Main branch only
+              </span>
+              <span className="px-2 py-0.5 rounded bg-secondary text-on-secondary font-medium whitespace-nowrap shrink-0">
+                Create fork
+              </span>
+            </div>
+
+            {/* Row 3: Your fork header + green Code button */}
+            <div className="rounded border border-outline-variant/35 bg-surface-container-low/30 px-2.5 py-1.5 flex items-center justify-between gap-2">
+              <div className="min-w-0">
+                <div className="font-mono text-on-surface font-medium truncate">
+                  your-username / sample-project
+                </div>
+                <div className="text-[9px] text-on-surface-variant truncate">
+                  forked from original-owner/sample-project
+                </div>
+              </div>
+              <span className="px-2.5 py-1 rounded bg-secondary text-on-secondary font-medium whitespace-nowrap shrink-0">
+                &lt;&gt; Code
+              </span>
+            </div>
+
+            {/* Row 4: Clone HTTPS + Download ZIP */}
+            <div className="rounded border border-outline-variant/35 p-2 bg-surface-container-low/20 space-y-1.5">
+              <div className="flex items-center justify-between gap-2">
+                <span className="font-semibold text-on-surface">Local · Clone · HTTPS</span>
+                <span className="inline-flex items-center gap-1 text-on-surface-variant">
+                  <Download className="w-3 h-3 text-secondary" />
+                  <span>Download ZIP</span>
+                </span>
+              </div>
+              <div className="flex items-center justify-between gap-2 px-2 py-1 rounded border border-outline-variant/40 bg-surface-container-lowest font-mono text-[9px] text-on-surface-variant">
+                <span className="truncate">https://github.com/your-username/sample-project.git</span>
+                <Copy className="w-3 h-3 text-primary shrink-0" />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {whereToFind.screenType === 'agents-page' && (
+          <div className="h-full rounded-lg bg-surface-container-lowest border border-outline-variant/35 p-3.5 flex flex-col justify-between">
+            <div className="flex items-center gap-3 text-[11px] border-b border-surface-container-high pb-2">
+              <span className="text-on-surface-variant">Code</span>
+              <span className="text-on-surface-variant">Issues</span>
+              <span className="text-on-surface-variant">Pull requests</span>
+              <span className="font-semibold text-primary border-b-2 border-primary pb-0.5">
+                Agents
+              </span>
+            </div>
+
+            <div className="my-auto rounded-lg border border-outline-variant/40 bg-surface-container-low/50 p-4 text-center space-y-2.5">
+              <p className="text-xs font-semibold text-on-surface">
+                Do more with Copilot
+              </p>
+              <p className="text-[11px] text-on-surface-variant">
+                Copilot is GitHub’s AI helper for small tasks.
+              </p>
+              <span className="inline-block px-3 py-1.5 rounded bg-secondary text-on-secondary text-[11px] font-medium">
+                Upgrade to Copilot Pro
+              </span>
+            </div>
+
+            <div className="text-[10px] text-on-surface-variant text-center border-t border-surface-container-high pt-2">
+              Free plan screen — you do not need to upgrade to finish this course.
+            </div>
+          </div>
+        )}
+
         {whereToFind.markers.map((marker) =>
           renderMarkerPin(marker.number, marker.xPercent, marker.yPercent)
         )}
@@ -314,6 +474,17 @@ export function ConceptLessonSections({
   const [activeMarker, setActiveMarker] = useState<number>(
     concept.whereToFind.markers[0]?.number ?? 1
   );
+  const [copiedCommandKey, setCopiedCommandKey] = useState<string | null>(null);
+
+  const handleCopyCommand = (key: string, commandText: string) => {
+    if (typeof navigator !== 'undefined' && navigator.clipboard) {
+      navigator.clipboard.writeText(commandText).catch(() => {});
+    }
+    setCopiedCommandKey(key);
+    window.setTimeout(() => {
+      setCopiedCommandKey((current) => (current === key ? null : current));
+    }, 1800);
+  };
 
   const storyAndMeaningText = [
     concept.story.title,
@@ -338,7 +509,11 @@ export function ConceptLessonSections({
   const whereText = [
     concept.whereToFind.title,
     concept.whereToFind.subtitle,
+    ...(concept.whereToFind.screenshotsNote ? [concept.whereToFind.screenshotsNote] : []),
     ...concept.whereToFind.markers.map((m) => `${m.number}. ${m.label}: ${m.description}`),
+    ...(concept.whereToFind.commands ?? []).map(
+      (c) => `${c.step ? `${c.step} — ` : ''}${c.label}: ${c.command}`
+    ),
   ].join('\n');
 
   const { activeSectionId, activeUnitId } = useSpeech();
@@ -348,6 +523,7 @@ export function ConceptLessonSections({
   const diagramSectionId = `${lessonId}-diagram`;
   const whereSectionId = `${lessonId}-where`;
   const afterMergingSectionId = `${lessonId}-after-merging`;
+  const tipSectionId = `${lessonId}-tip`;
   const mistakeSectionId = `${lessonId}-mistake`;
 
   const isTranslatingStory = useSectionShimmer('story');
@@ -355,6 +531,7 @@ export function ConceptLessonSections({
   const isTranslatingDiagram = useSectionShimmer('diagram');
   const isTranslatingWhere = useSectionShimmer('where');
   const isTranslatingAfterMerging = useSectionShimmer('afterMerging');
+  const isTranslatingTip = useSectionShimmer('tip');
   const isTranslatingMistake = useSectionShimmer('mistake');
 
   const buildStoryUnits = (): SpeechUnit[] => [
@@ -459,6 +636,18 @@ export function ConceptLessonSections({
     ];
   };
 
+  const buildTipUnits = (): SpeechUnit[] => {
+    if (!concept.tip) return [];
+    return [
+      {
+        id: `${tipSectionId}-title`,
+        text: concept.tip.title,
+        speechText: sanitizeTextForSpeech(concept.tip.title),
+      },
+      ...buildSentenceUnits(`${tipSectionId}-body`, concept.tip.text),
+    ];
+  };
+
   const buildMistakeUnits = (): SpeechUnit[] => [
     {
       id: `${mistakeSectionId}-title`,
@@ -466,6 +655,14 @@ export function ConceptLessonSections({
       speechText: sanitizeTextForSpeech(concept.commonMistake.title),
     },
     ...buildSentenceUnits(`${mistakeSectionId}-body`, concept.commonMistake.text),
+    ...(concept.commonMistake.items ?? []).flatMap((item, idx) => [
+      {
+        id: `${mistakeSectionId}-item-${idx}-title`,
+        text: item.title,
+        speechText: sanitizeTextForSpeech(item.title),
+      },
+      ...buildSentenceUnits(`${mistakeSectionId}-item-${idx}-body`, item.text),
+    ]),
   ];
 
   const isCodeStripActive =
@@ -788,6 +985,312 @@ export function ConceptLessonSections({
             </div>
           )}
 
+          {concept.diagram.variant === 'fork-clone-flow' && (
+            <div className="mb-6 rounded-xl border border-outline-variant/40 bg-surface-container-low/45 p-4 sm:p-6 overflow-x-auto">
+              <svg
+                viewBox="0 0 820 215"
+                className="w-full min-w-[540px] h-auto"
+                role="img"
+                aria-label="Diagram showing Original repository (original-owner), an arrow labeled Fork to Your fork (your-username, on GitHub), an arrow labeled Clone to Your computer, and a curved arrow labeled Pull request from Your fork back to Original repository"
+              >
+                <defs>
+                  <marker
+                    id="fc-arrow-neutral"
+                    markerWidth="8"
+                    markerHeight="8"
+                    refX="6"
+                    refY="4"
+                    orient="auto"
+                  >
+                    <path d="M0,1 L7,4 L0,7 z" className="fill-on-surface" />
+                  </marker>
+                  <marker
+                    id="fc-arrow-primary"
+                    markerWidth="8"
+                    markerHeight="8"
+                    refX="6"
+                    refY="4"
+                    orient="auto"
+                  >
+                    <path d="M0,1 L7,4 L0,7 z" className="fill-primary" />
+                  </marker>
+                </defs>
+
+                {/* Curved Pull request arrow from Your fork back to Original repository */}
+                <path
+                  d="M 420 92 C 420 20, 124 20, 124 85"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeDasharray="6 4"
+                  markerEnd="url(#fc-arrow-primary)"
+                  className="text-primary"
+                />
+                <rect
+                  x="218"
+                  y="24"
+                  width="108"
+                  height="24"
+                  rx="6"
+                  className="fill-surface-container-lowest stroke-primary/60"
+                  strokeWidth="1"
+                />
+                <text
+                  x="272"
+                  y="40"
+                  textAnchor="middle"
+                  className="fill-primary text-[12px] font-semibold"
+                >
+                  Pull request
+                </text>
+
+                {/* Box 1: Original repository */}
+                <rect
+                  x="16"
+                  y="94"
+                  width="216"
+                  height="92"
+                  rx="12"
+                  className="fill-surface-container-lowest stroke-outline-variant"
+                  strokeWidth="1.5"
+                />
+                <text
+                  x="124"
+                  y="133"
+                  textAnchor="middle"
+                  className="fill-on-surface text-[14px] font-semibold"
+                >
+                  Original repository
+                </text>
+                <text
+                  x="124"
+                  y="155"
+                  textAnchor="middle"
+                  className="fill-on-surface-variant font-mono text-[12px]"
+                >
+                  (original-owner)
+                </text>
+
+                {/* Arrow 1 -> 2: Fork */}
+                <line
+                  x1="238"
+                  y1="140"
+                  x2="300"
+                  y2="140"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  markerEnd="url(#fc-arrow-primary)"
+                  className="text-primary"
+                />
+                <text
+                  x="270"
+                  y="126"
+                  textAnchor="middle"
+                  className="fill-primary text-[12px] font-semibold"
+                >
+                  Fork
+                </text>
+
+                {/* Box 2: Your fork */}
+                <rect
+                  x="308"
+                  y="94"
+                  width="224"
+                  height="92"
+                  rx="12"
+                  className="fill-surface-container-lowest stroke-primary/60"
+                  strokeWidth="1.5"
+                />
+                <text
+                  x="420"
+                  y="133"
+                  textAnchor="middle"
+                  className="fill-primary text-[14px] font-semibold"
+                >
+                  Your fork
+                </text>
+                <text
+                  x="420"
+                  y="155"
+                  textAnchor="middle"
+                  className="fill-on-surface-variant font-mono text-[11.5px]"
+                >
+                  (your-username, on GitHub)
+                </text>
+
+                {/* Arrow 2 -> 3: Clone */}
+                <line
+                  x1="538"
+                  y1="140"
+                  x2="600"
+                  y2="140"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  markerEnd="url(#fc-arrow-neutral)"
+                  className="text-on-surface/80"
+                />
+                <text
+                  x="570"
+                  y="126"
+                  textAnchor="middle"
+                  className="fill-on-surface text-[12px] font-semibold"
+                >
+                  Clone
+                </text>
+
+                {/* Box 3: Your computer */}
+                <rect
+                  x="608"
+                  y="94"
+                  width="196"
+                  height="92"
+                  rx="12"
+                  className="fill-surface-container-lowest stroke-secondary/60"
+                  strokeWidth="1.5"
+                />
+                <text
+                  x="706"
+                  y="144"
+                  textAnchor="middle"
+                  className="fill-secondary text-[14px] font-semibold"
+                >
+                  Your computer
+                </text>
+              </svg>
+            </div>
+          )}
+
+          {concept.diagram.variant === 'staging-flow' && (
+            <div className="mb-6 rounded-xl border border-outline-variant/40 bg-surface-container-low/45 p-4 sm:p-6 overflow-x-auto">
+              <svg
+                viewBox="0 0 820 144"
+                className="w-full min-w-[540px] h-auto"
+                role="img"
+                aria-label="Three boxes in a row: Your folder, an arrow labeled git add pointing to Staging area, and an arrow labeled git commit pointing to Commit history"
+              >
+                <defs>
+                  <marker
+                    id="stage-arrow-primary"
+                    markerWidth="8"
+                    markerHeight="8"
+                    refX="6"
+                    refY="4"
+                    orient="auto"
+                  >
+                    <path d="M0,1 L7,4 L0,7 z" className="fill-primary" />
+                  </marker>
+                  <marker
+                    id="stage-arrow-secondary"
+                    markerWidth="8"
+                    markerHeight="8"
+                    refX="6"
+                    refY="4"
+                    orient="auto"
+                  >
+                    <path d="M0,1 L7,4 L0,7 z" className="fill-secondary" />
+                  </marker>
+                </defs>
+
+                {/* Box 1: Your folder */}
+                <rect
+                  x="16"
+                  y="26"
+                  width="202"
+                  height="92"
+                  rx="12"
+                  className="fill-surface-container-lowest stroke-outline-variant"
+                  strokeWidth="1.5"
+                />
+                <text
+                  x="117"
+                  y="77"
+                  textAnchor="middle"
+                  className="fill-on-surface text-[15px] font-semibold"
+                >
+                  Your folder
+                </text>
+
+                {/* Arrow 1 -> 2: git add */}
+                <line
+                  x1="226"
+                  y1="72"
+                  x2="298"
+                  y2="72"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  markerEnd="url(#stage-arrow-primary)"
+                  className="text-primary"
+                />
+                <text
+                  x="263"
+                  y="56"
+                  textAnchor="middle"
+                  className="fill-primary font-mono text-[12px] font-semibold"
+                >
+                  git add
+                </text>
+
+                {/* Box 2: Staging area */}
+                <rect
+                  x="306"
+                  y="26"
+                  width="208"
+                  height="92"
+                  rx="12"
+                  className="fill-surface-container-lowest stroke-primary/60"
+                  strokeWidth="1.5"
+                />
+                <text
+                  x="410"
+                  y="77"
+                  textAnchor="middle"
+                  className="fill-primary text-[15px] font-semibold"
+                >
+                  Staging area
+                </text>
+
+                {/* Arrow 2 -> 3: git commit */}
+                <line
+                  x1="522"
+                  y1="72"
+                  x2="594"
+                  y2="72"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  markerEnd="url(#stage-arrow-secondary)"
+                  className="text-secondary"
+                />
+                <text
+                  x="559"
+                  y="56"
+                  textAnchor="middle"
+                  className="fill-secondary font-mono text-[12px] font-semibold"
+                >
+                  git commit
+                </text>
+
+                {/* Box 3: Commit history */}
+                <rect
+                  x="602"
+                  y="26"
+                  width="202"
+                  height="92"
+                  rx="12"
+                  className="fill-surface-container-lowest stroke-secondary/60"
+                  strokeWidth="1.5"
+                />
+                <text
+                  x="703"
+                  y="77"
+                  textAnchor="middle"
+                  className="fill-secondary text-[15px] font-semibold"
+                >
+                  Commit history
+                </text>
+              </svg>
+            </div>
+          )}
+
           <div
             className={`grid grid-cols-1 sm:grid-cols-2 ${
               concept.diagram.nodes.length === 3 ? 'lg:grid-cols-3' : 'lg:grid-cols-4'
@@ -855,7 +1358,9 @@ export function ConceptLessonSections({
         className={`scroll-mt-24 ${
           concept.whereToFind.screenshots && concept.whereToFind.screenshots.length > 0
             ? 'space-y-8'
-            : 'grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center'
+            : concept.whereToFind.extraScreenshots && concept.whereToFind.extraScreenshots.length > 0
+              ? 'space-y-10'
+              : 'grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center'
         } ${isTranslatingWhere ? 'translate-section-shimmer' : ''}`}
       >
         {concept.whereToFind.screenshots && concept.whereToFind.screenshots.length > 0 ? (
@@ -896,6 +1401,110 @@ export function ConceptLessonSections({
                 />
               </p>
             </div>
+
+            {concept.whereToFind.showStepList && concept.whereToFind.markers.length > 0 && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+                {concept.whereToFind.markers.map((marker) => (
+                  <div
+                    key={marker.number}
+                    className="rounded-xl p-4 border bg-surface-container-low/45 border-outline-variant/40 flex items-start gap-3"
+                  >
+                    <span className="w-6 h-6 rounded-full bg-primary text-on-primary font-mono text-xs font-semibold flex items-center justify-center shrink-0 mt-0.5">
+                      {marker.number}
+                    </span>
+                    <div className="min-w-0 flex-1 space-y-1">
+                      <p className="text-sm font-medium text-on-surface">
+                        <SpeakableHighlight
+                          sectionId={whereSectionId}
+                          unitId={`${whereSectionId}-m-${marker.number}-label`}
+                        >
+                          {marker.label}
+                        </SpeakableHighlight>
+                      </p>
+                      <p className="text-xs text-on-surface-variant leading-relaxed">
+                        <SpeakableText
+                          sectionId={whereSectionId}
+                          unitPrefix={`${whereSectionId}-m-${marker.number}-desc`}
+                          text={marker.description}
+                        />
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {concept.whereToFind.commands && concept.whereToFind.commands.length > 0 && (
+              <div className="rounded-xl border border-outline-variant/45 bg-surface-container-lowest p-5 sm:p-6 space-y-4 shadow-[0_4px_20px_-2px_rgba(28,25,23,0.04)]">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <Terminal className="w-4 h-4 text-primary shrink-0" />
+                    <h3 className="text-base font-medium text-on-surface">
+                      Commands to type in your terminal
+                    </h3>
+                  </div>
+                  <span className="text-xs font-medium text-secondary">
+                    Press Enter after each command
+                  </span>
+                </div>
+
+                <div className="space-y-3">
+                  {concept.whereToFind.commands.map((item, idx) => {
+                    const key = item.id || `${lessonId}-cmd-${idx}`;
+                    const isCopied = copiedCommandKey === key;
+                    return (
+                      <div
+                        key={key}
+                        className="rounded-lg border border-outline-variant/35 bg-surface-container-low/40 p-3.5 space-y-2"
+                      >
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <div className="flex items-center gap-2 text-xs text-on-surface-variant">
+                            {item.step && (
+                              <span className="font-mono font-semibold text-primary">
+                                {item.step}
+                              </span>
+                            )}
+                            <span className="font-medium text-on-surface">{item.label}</span>
+                          </div>
+                          {item.note && (
+                            <span className="text-[11px] text-on-surface-variant">{item.note}</span>
+                          )}
+                        </div>
+                        <div className="flex items-center justify-between gap-3 rounded-lg bg-[#161b22] text-[#e6edf3] px-3.5 py-2.5 border border-outline-variant/30">
+                          <code className="font-mono text-xs sm:text-[13px] overflow-x-auto whitespace-nowrap">
+                            {item.command}
+                          </code>
+                          <button
+                            type="button"
+                            onClick={() => handleCopyCommand(key, item.command)}
+                            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-white/10 hover:bg-white/20 text-white text-[11px] font-medium shrink-0 cursor-pointer transition-colors"
+                            aria-label={`Copy command: ${item.command}`}
+                          >
+                            {isCopied ? (
+                              <>
+                                <Check className="w-3.5 h-3.5 text-emerald-300" />
+                                <span>Copied</span>
+                              </>
+                            ) : (
+                              <>
+                                <Copy className="w-3.5 h-3.5" />
+                                <span>Copy</span>
+                              </>
+                            )}
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {concept.whereToFind.screenshotsNote && (
+              <div className="rounded-xl border border-outline-variant/45 bg-surface-container-low/50 px-4 py-3 text-sm text-on-surface-variant leading-relaxed">
+                {concept.whereToFind.screenshotsNote}
+              </div>
+            )}
 
             <div className="space-y-10">
               {concept.whereToFind.screenshots.map((shot) => (
@@ -948,133 +1557,186 @@ export function ConceptLessonSections({
           </>
         ) : (
           <>
-            <div className="lg:col-span-6">
-              <WhereToFindMockup
-                whereToFind={concept.whereToFind}
-                activeMarker={activeMarker}
-                onSelectMarker={(num) => {
-                  setActiveMarker(num);
-                  onSectionInteracted('where');
-                }}
-              />
-            </div>
-
-            <div className="lg:col-span-6 space-y-5">
-              <div>
-                <div className="flex flex-wrap items-center justify-between gap-2.5 mb-2">
-                  <span className="text-xs tracking-[0.12em] text-primary font-semibold uppercase">
-                    {concept.whereToFind.eyebrow}
-                  </span>
-                  <div className="flex flex-wrap items-center gap-2">
-                    <SectionTranslationPill sectionId="where" />
-                    <SectionListenButton
-                      sectionId={whereSectionId}
-                      sectionLabel={concept.whereToFind.title}
-                      getUnits={buildWhereUnits}
-                    />
-                    <AskAboutButton
-                      sectionId={`${lessonId}-where`}
-                      topic={concept.whereToFind.title}
-                      sectionText={whereText}
-                    />
-                  </div>
-                </div>
-                <h2 className="text-[26px] sm:text-[32px] leading-[1.24] font-normal text-on-surface tracking-[-0.015em] mb-2">
-                  <SpeakableHighlight
-                    sectionId={whereSectionId}
-                    unitId={`${whereSectionId}-title`}
-                  >
-                    {concept.whereToFind.title}
-                  </SpeakableHighlight>
-                </h2>
-                <p className="text-sm sm:text-base text-on-surface-variant leading-relaxed">
-                  <SpeakableText
-                    sectionId={whereSectionId}
-                    unitPrefix={`${whereSectionId}-sub`}
-                    text={concept.whereToFind.subtitle}
-                    withExplain={false}
-                  />
-                </p>
+            <div
+              className={
+                concept.whereToFind.extraScreenshots && concept.whereToFind.extraScreenshots.length > 0
+                  ? 'grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center'
+                  : 'contents'
+              }
+            >
+              <div className="lg:col-span-6">
+                <WhereToFindMockup
+                  whereToFind={concept.whereToFind}
+                  activeMarker={activeMarker}
+                  onSelectMarker={(num) => {
+                    setActiveMarker(num);
+                    onSectionInteracted('where');
+                  }}
+                />
               </div>
 
-              <div className="space-y-3">
-                {concept.whereToFind.markers.map((marker) => {
-                  const isSelected = activeMarker === marker.number;
-                  return (
-                    <div
-                      key={marker.number}
-                      className={`w-full text-left rounded-xl p-4 border flex items-start gap-3.5 transition-colors ${
-                        isSelected
-                          ? 'bg-surface-container-lowest border-primary/50 shadow-xs'
-                          : 'bg-surface-container-low/40 border-outline-variant/35 hover:bg-surface-container-lowest/80'
-                      }`}
+              <div className="lg:col-span-6 space-y-5">
+                <div>
+                  <div className="flex flex-wrap items-center justify-between gap-2.5 mb-2">
+                    <span className="text-xs tracking-[0.12em] text-primary font-semibold uppercase">
+                      {concept.whereToFind.eyebrow}
+                    </span>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <SectionTranslationPill sectionId="where" />
+                      <SectionListenButton
+                        sectionId={whereSectionId}
+                        sectionLabel={concept.whereToFind.title}
+                        getUnits={buildWhereUnits}
+                      />
+                      <AskAboutButton
+                        sectionId={`${lessonId}-where`}
+                        topic={concept.whereToFind.title}
+                        sectionText={whereText}
+                      />
+                    </div>
+                  </div>
+                  <h2 className="text-[26px] sm:text-[32px] leading-[1.24] font-normal text-on-surface tracking-[-0.015em] mb-2">
+                    <SpeakableHighlight
+                      sectionId={whereSectionId}
+                      unitId={`${whereSectionId}-title`}
                     >
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setActiveMarker(marker.number);
-                          onSectionInteracted('where');
-                        }}
-                        className={`w-6 h-6 rounded-full font-mono text-xs font-semibold flex items-center justify-center shrink-0 mt-0.5 cursor-pointer transition-colors ${
+                      {concept.whereToFind.title}
+                    </SpeakableHighlight>
+                  </h2>
+                  <p className="text-sm sm:text-base text-on-surface-variant leading-relaxed">
+                    <SpeakableText
+                      sectionId={whereSectionId}
+                      unitPrefix={`${whereSectionId}-sub`}
+                      text={concept.whereToFind.subtitle}
+                      withExplain={false}
+                    />
+                  </p>
+                </div>
+
+                <div className="space-y-3">
+                  {concept.whereToFind.markers.map((marker) => {
+                    const isSelected = activeMarker === marker.number;
+                    return (
+                      <div
+                        key={marker.number}
+                        className={`w-full text-left rounded-xl p-4 border flex items-start gap-3.5 transition-colors ${
                           isSelected
-                            ? 'bg-primary text-on-primary'
-                            : 'bg-surface-container-lowest border border-primary/50 text-primary hover:bg-primary-fixed'
+                            ? 'bg-surface-container-lowest border-primary/50 shadow-xs'
+                            : 'bg-surface-container-low/40 border-outline-variant/35 hover:bg-surface-container-lowest/80'
                         }`}
-                        aria-label={`Highlight marker ${marker.number}: ${marker.label}`}
                       >
-                        {marker.number}
-                      </button>
-                      <div className="min-w-0 flex-1">
                         <button
                           type="button"
                           onClick={() => {
                             setActiveMarker(marker.number);
                             onSectionInteracted('where');
                           }}
-                          className="text-left text-sm font-medium text-on-surface hover:text-primary transition-colors block mb-1 cursor-pointer"
+                          className={`w-6 h-6 rounded-full font-mono text-xs font-semibold flex items-center justify-center shrink-0 mt-0.5 cursor-pointer transition-colors ${
+                            isSelected
+                              ? 'bg-primary text-on-primary'
+                              : 'bg-surface-container-lowest border border-primary/50 text-primary hover:bg-primary-fixed'
+                          }`}
+                          aria-label={`Highlight marker ${marker.number}: ${marker.label}`}
                         >
-                          <SpeakableHighlight
-                            sectionId={whereSectionId}
-                            unitId={`${whereSectionId}-m-${marker.number}-label`}
-                          >
-                            {marker.label}
-                          </SpeakableHighlight>
+                          {marker.number}
                         </button>
-                        <p className="text-xs text-on-surface-variant leading-relaxed">
-                          <SpeakableText
-                            sectionId={whereSectionId}
-                            unitPrefix={`${whereSectionId}-m-${marker.number}-desc`}
-                            text={marker.description}
-                          />
-                        </p>
-                        {marker.screenshot && (
-                          <div
-                            className="mt-3.5"
+                        <div className="min-w-0 flex-1">
+                          <button
+                            type="button"
                             onClick={() => {
                               setActiveMarker(marker.number);
                               onSectionInteracted('where');
                             }}
+                            className="text-left text-sm font-medium text-on-surface hover:text-primary transition-colors block mb-1 cursor-pointer"
                           >
-                            <ScreenshotFrame
-                              src={marker.screenshot.src}
-                              alt={marker.screenshot.alt}
-                              caption={marker.screenshot.caption}
-                              markers={marker.screenshot.markers}
+                            <SpeakableHighlight
+                              sectionId={whereSectionId}
+                              unitId={`${whereSectionId}-m-${marker.number}-label`}
+                            >
+                              {marker.label}
+                            </SpeakableHighlight>
+                          </button>
+                          <p className="text-xs text-on-surface-variant leading-relaxed">
+                            <SpeakableText
+                              sectionId={whereSectionId}
+                              unitPrefix={`${whereSectionId}-m-${marker.number}-desc`}
+                              text={marker.description}
                             />
-                          </div>
+                          </p>
+                          {marker.screenshot && (
+                            <div
+                              className="mt-3.5"
+                              onClick={() => {
+                                setActiveMarker(marker.number);
+                                onSectionInteracted('where');
+                              }}
+                            >
+                              <ScreenshotFrame
+                                src={marker.screenshot.src}
+                                alt={marker.screenshot.alt}
+                                caption={marker.screenshot.caption}
+                                markers={marker.screenshot.markers}
+                              />
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+                <SectionFeedbackWidget
+                  lessonId={lessonId}
+                  lessonTitle={lessonTitle}
+                  sectionId="where"
+                  sectionTitle={concept.whereToFind.title}
+                />
+              </div>
+            </div>
+
+            {concept.whereToFind.extraScreenshots &&
+              concept.whereToFind.extraScreenshots.length > 0 && (
+                <div className="space-y-10">
+                  {concept.whereToFind.extraScreenshots.map((shot) => (
+                    <div
+                      key={shot.id || shot.src}
+                      className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-start"
+                    >
+                      <div
+                        className="lg:col-span-7"
+                        onClick={() => onSectionInteracted('where')}
+                      >
+                        {shot.title && (
+                          <h3 className="text-lg font-medium text-on-surface mb-3">
+                            {shot.title}
+                          </h3>
                         )}
+                        <ScreenshotFrame
+                          src={shot.src}
+                          alt={shot.alt}
+                          caption={shot.caption}
+                          markers={shot.markers}
+                        />
+                      </div>
+
+                      <div className="lg:col-span-5 space-y-2.5">
+                        {shot.markers.map((marker) => (
+                          <div
+                            key={marker.n}
+                            className="rounded-xl p-3.5 border bg-surface-container-low/40 border-outline-variant/35 flex items-start gap-3"
+                          >
+                            <span className="w-6 h-6 rounded-full bg-primary text-on-primary font-mono text-xs font-semibold flex items-center justify-center shrink-0 mt-0.5">
+                              {marker.n}
+                            </span>
+                            <p className="text-xs sm:text-[13px] text-on-surface leading-relaxed">
+                              {marker.label}
+                            </p>
+                          </div>
+                        ))}
                       </div>
                     </div>
-                  );
-                })}
-              </div>
-              <SectionFeedbackWidget
-                lessonId={lessonId}
-                lessonTitle={lessonTitle}
-                sectionId="where"
-                sectionTitle={concept.whereToFind.title}
-              />
-            </div>
+                  ))}
+                </div>
+              )}
           </>
         )}
       </section>
@@ -1158,6 +1820,91 @@ export function ConceptLessonSections({
         </section>
       )}
 
+      {/* 4c. Helpful Tip (optional concept callout) */}
+      {concept.tip && (
+        <section
+          id="concept-tip"
+          data-translate-section="tip"
+          data-section-title={concept.tip.title}
+          className={`w-full scroll-mt-24 ${isTranslatingTip ? 'translate-section-shimmer' : ''}`}
+        >
+          <div className="border-l-2 border-secondary bg-surface-container-lowest p-6 sm:p-8 rounded-r-xl border-y border-r border-outline-variant/45 shadow-[0_4px_20px_-2px_rgba(28,25,23,0.04)]">
+            <div className="flex items-start gap-4">
+              <Lightbulb className="w-5 h-5 text-secondary shrink-0 mt-1" />
+              <div className="flex-1 min-w-0">
+                <div className="flex flex-wrap items-center justify-between gap-2.5 mb-1.5">
+                  <span className="text-[11px] tracking-[0.12em] text-secondary font-semibold uppercase">
+                    {concept.tip.eyebrow}
+                  </span>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <SectionTranslationPill sectionId="tip" />
+                    <SectionListenButton
+                      sectionId={tipSectionId}
+                      sectionLabel={concept.tip.title}
+                      getUnits={buildTipUnits}
+                    />
+                    <AskAboutButton
+                      sectionId={`${lessonId}-tip`}
+                      topic={concept.tip.title}
+                      sectionText={`${concept.tip.title}\n${concept.tip.text}`}
+                    />
+                  </div>
+                </div>
+                <h3 className="text-lg font-medium text-on-surface mb-2">
+                  <SpeakableHighlight sectionId={tipSectionId} unitId={`${tipSectionId}-title`}>
+                    {concept.tip.title}
+                  </SpeakableHighlight>
+                </h3>
+                <p className="text-sm sm:text-[15px] text-on-surface-variant leading-relaxed max-w-[65ch]">
+                  <SpeakableText
+                    sectionId={tipSectionId}
+                    unitPrefix={`${tipSectionId}-body`}
+                    text={concept.tip.text}
+                  />
+                </p>
+                {concept.tip.codeSnippet && (
+                  <div className="mt-4 inline-flex items-center gap-2.5 px-3 py-1.5 rounded-lg bg-surface-container-low border border-outline-variant/40">
+                    <span className="text-[11px] text-on-surface-variant">Example:</span>
+                    <code className="font-mono text-xs font-semibold text-primary">
+                      {concept.tip.codeSnippet}
+                    </code>
+                    {concept.tip.copyable && (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          handleCopyCommand(`${lessonId}-tip-snippet`, concept.tip!.codeSnippet!)
+                        }
+                        className="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container-lowest border border-outline-variant/45 hover:border-primary/50 text-[11px] font-medium text-on-surface cursor-pointer transition-colors"
+                        aria-label={`Copy command: ${concept.tip.codeSnippet}`}
+                      >
+                        {copiedCommandKey === `${lessonId}-tip-snippet` ? (
+                          <>
+                            <Check className="w-3 h-3 text-secondary" />
+                            <span>Copied</span>
+                          </>
+                        ) : (
+                          <>
+                            <Copy className="w-3 h-3 text-primary" />
+                            <span>Copy</span>
+                          </>
+                        )}
+                      </button>
+                    )}
+                  </div>
+                )}
+                <SectionFeedbackWidget
+                  lessonId={lessonId}
+                  lessonTitle={lessonTitle}
+                  sectionId="tip"
+                  sectionTitle={concept.tip.title}
+                  className="!mt-5"
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* 5. Common mistake callout */}
       <section
         id="concept-mistake"
@@ -1183,7 +1930,11 @@ export function ConceptLessonSections({
                   <AskAboutButton
                     sectionId={`${lessonId}-mistake`}
                     topic={concept.commonMistake.title}
-                    sectionText={`${concept.commonMistake.title}\n${concept.commonMistake.text}`}
+                    sectionText={[
+                      concept.commonMistake.title,
+                      concept.commonMistake.text,
+                      ...(concept.commonMistake.items ?? []).map((i) => `${i.title}: ${i.text}`),
+                    ].join('\n')}
                   />
                 </div>
               </div>
@@ -1202,6 +1953,32 @@ export function ConceptLessonSections({
                   text={concept.commonMistake.text}
                 />
               </p>
+              {concept.commonMistake.items && concept.commonMistake.items.length > 0 && (
+                <div className="mt-5 grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {concept.commonMistake.items.map((item, idx) => (
+                    <div
+                      key={item.title}
+                      className="rounded-lg bg-surface-container-lowest border border-outline-variant/35 p-4 space-y-1.5"
+                    >
+                      <h4 className="text-sm font-medium text-on-surface">
+                        <SpeakableHighlight
+                          sectionId={mistakeSectionId}
+                          unitId={`${mistakeSectionId}-item-${idx}-title`}
+                        >
+                          {item.title}
+                        </SpeakableHighlight>
+                      </h4>
+                      <p className="text-xs sm:text-[13px] text-on-surface-variant leading-relaxed">
+                        <SpeakableText
+                          sectionId={mistakeSectionId}
+                          unitPrefix={`${mistakeSectionId}-item-${idx}-body`}
+                          text={item.text}
+                        />
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              )}
               {concept.commonMistake.screenshot && (
                 <div className="mt-6 max-w-3xl">
                   <ScreenshotFrame

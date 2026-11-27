@@ -30,6 +30,8 @@ interface QuizAndCompletionSectionProps {
   onNextLesson?: () => void;
   onBackToLessons: () => void;
   onTryItYourself?: () => void;
+  allCourseCompleted?: boolean;
+  onOpenFinishScreen?: () => void;
 }
 
 function QuizQuestionCard({
@@ -179,6 +181,8 @@ export function QuizAndCompletionSection({
   onNextLesson,
   onBackToLessons,
   onTryItYourself,
+  allCourseCompleted = false,
+  onOpenFinishScreen,
 }: QuizAndCompletionSectionProps) {
   const questionList: QuizData[] = quizzes && quizzes.length > 0 ? quizzes : quiz ? [quiz] : [];
 
@@ -330,11 +334,22 @@ export function QuizAndCompletionSection({
                   </button>
                 )}
 
+                {allCourseCompleted && onOpenFinishScreen && (
+                  <button
+                    type="button"
+                    onClick={onOpenFinishScreen}
+                    className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-primary text-on-primary text-sm font-medium shadow-sm hover:bg-primary-container transition-colors cursor-pointer"
+                  >
+                    <span>Open completion summary</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                )}
+
                 <button
                   type="button"
                   onClick={onBackToLessons}
                   className={`w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg text-sm font-medium transition-colors cursor-pointer ${
-                    hasNextLesson
+                    hasNextLesson || (allCourseCompleted && onOpenFinishScreen)
                       ? 'bg-surface-container-lowest border border-outline-variant/45 text-on-surface hover:bg-surface-container-low'
                       : 'bg-secondary text-on-secondary shadow-sm hover:opacity-95'
                   }`}

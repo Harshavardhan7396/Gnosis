@@ -15,6 +15,7 @@ import { WhereAmIStuckPage } from './components/WhereAmIStuckPage';
 import { CheatSheetPage } from './components/CheatSheetPage';
 import { FeedbackDashboardPage } from './components/FeedbackDashboardPage';
 import { TranslateAdminPage } from './components/TranslateAdminPage';
+import { FinishScreenPage } from './components/FinishScreenPage';
 import { HeroSection } from './components/HeroSection';
 import { ProgressRow } from './components/ProgressRow';
 import { ConceptLessonSections } from './components/ConceptLessonSections';
@@ -60,6 +61,11 @@ import {
   saveLanguage,
   type SupportedLanguage,
 } from './utils/lessonTranslation';
+import {
+  getLessonLockReason,
+  getLevelUnlockMap,
+  isLessonUnlocked,
+} from './utils/lessonUnlock';
 
 const lessons = rawLessons as Lesson[];
 const roadmapLevels = rawRoadmapLevels as RoadmapLevel[];
@@ -217,6 +223,7 @@ export default function App() {
     | 'cheat-sheet'
     | 'feedback'
     | 'translate-admin'
+    | 'finished'
   >(() =>
     isTranslateAdminRoute()
       ? 'translate-admin'
@@ -261,6 +268,16 @@ export default function App() {
     []
   );
 
+  const activePlayableIndex = useMemo(() => {
+    const idx = playableLessons.findIndex((l) => l.id === currentLesson.id);
+    return idx >= 0 ? idx : activeLessonIndex;
+  }, [playableLessons, currentLesson.id, activeLessonIndex]);
+
+  const nextPlayableIndex = useMemo(
+    () => lessons.findIndex((l, idx) => idx > activeLessonIndex && !l.comingSoon),
+    [activeLessonIndex]
+  );
+
   const completedLessonIds = useMemo(
     () =>
       playableLessons
@@ -270,6 +287,21 @@ export default function App() {
   );
 
   const completedLessonsCount = completedLessonIds.length;
+
+  const allLevelsCompleted = useMemo(
+    () =>
+      roadmapLevels.length > 0 &&
+      roadmapLevels.every((level) => {
+        const levelLessons = lessons.filter((l) => l.levelId === level.id);
+        return (
+          levelLessons.length > 0 &&
+          levelLessons.every(
+            (l) => !l.comingSoon && Boolean(progressByLessonId[l.id]?.lessonCompleted)
+          )
+        );
+      }),
+    [progressByLessonId]
+  );
 
   const dueReviews = useMemo(
     () => getDueReviewLessons(lessons, completedLessonIds, spacedReviewMap),
@@ -290,6 +322,31 @@ export default function App() {
     }
     return 0;
   }, []);
+
+  const levelUnlockMap = useMemo(
+    () => getLevelUnlockMap(roadmapLevels, lessons, progressByLessonId),
+    [progressByLessonId]
+  );
+
+  const { unlockedLessonIds, lockReasonByLessonId } = useMemo(() => {
+    const unlocked = new Set<string>();
+    const reasons: Record<string, string> = {};
+    let playableCounter = 0;
+
+    lessons.forEach((lesson, idx) => {
+      if (!lesson.comingSoon) {
+        playableCounter += 1;
+      }
+      const lessonNum = lesson.comingSoon ? idx + 1 : playableCounter;
+      if (isLessonUnlocked(lesson, idx, lessons, progressByLessonId, levelUnlockMap)) {
+        unlocked.add(lesson.id);
+      } else {
+        reasons[lesson.id] = getLessonLockReason(lesson, lessonNum, levelUnlockMap);
+      }
+    });
+
+    return { unlockedLessonIds: unlocked, lockReasonByLessonId: reasons };
+  }, [progressByLessonId, levelUnlockMap]);
 
   const unlockedMaxIndex =
     firstUnfinishedIndex === -1 ? lastPlayableIndex : firstUnfinishedIndex;
@@ -313,7 +370,7 @@ export default function App() {
       if (
         lastIdx >= 0 &&
         !lessons[lastIdx]?.comingSoon &&
-        lastIdx <= unlockedMaxIndex &&
+        unlockedLessonIds.has(lastLessonId) &&
         !progressByLessonId[lastLessonId]?.lessonCompleted
       ) {
         return lastIdx;
@@ -322,7 +379,7 @@ export default function App() {
     return firstUnfinishedIndex >= 0 ? firstUnfinishedIndex : lastPlayableIndex;
   }, [
     lastLessonId,
-    unlockedMaxIndex,
+    unlockedLessonIds,
     progressByLessonId,
     firstUnfinishedIndex,
     lastPlayableIndex,
@@ -551,6 +608,12 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [ensureRootPath]);
 
+  const handleOpenFinishScreen = useCallback(() => {
+    ensureRootPath();
+    setCurrentView('finished');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [ensureRootPath]);
+
   const handleStartLearning = () => {
     if (
       currentView === 'lessons' ||
@@ -559,7 +622,8 @@ export default function App() {
       currentView === 'stuck' ||
       currentView === 'cheat-sheet' ||
       currentView === 'feedback' ||
-      currentView === 'translate-admin'
+      currentView === 'translate-admin' ||
+      currentView === 'finished'
     ) {
       openLessonAtIndex(continueLessonIndex);
     } else {
@@ -632,10 +696,30 @@ export default function App() {
       quizTotal: stats.quizTotal,
       lessonCompleted: true,
     }));
+    const wouldCompleteAllLevels =
+      roadmapLevels.length > 0 &&
+      roadmapLevels.every((level) => {
+        const levelLessons = lessons.filter((l) => l.levelId === level.id);
+        return (
+          levelLessons.length > 0 &&
+          levelLessons.every(
+            (l) =>
+              !l.comingSoon &&
+              (l.id === currentLesson.id || Boolean(progressByLessonId[l.id]?.lessonCompleted))
+          )
+        );
+      });
+
     setSpacedReviewMap(scheduleLessonCompletionReview(currentLesson.id));
     setActiveProgressStepId(
       currentLesson.progressSteps[currentLesson.progressSteps.length - 1]?.id ?? 'verify'
     );
+
+    if (!allLevelsCompleted && wouldCompleteAllLevels) {
+      ensureRootPath();
+      setCurrentView('finished');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   };
 
   const handleCompleteSpacedReview = useCallback((lessonId: string, allCorrect: boolean) => {
@@ -710,7 +794,9 @@ export default function App() {
                 ? 'Learner Feedback'
                 : currentView === 'translate-admin'
                   ? 'Translation Admin'
-                  : `Lesson ${String(activeLessonIndex + 1).padStart(2, '0')}: ${currentLesson.cardTitle}`;
+                  : currentView === 'finished'
+                    ? 'You finished GitStart'
+                    : `Lesson ${String(activeLessonIndex + 1).padStart(2, '0')}: ${currentLesson.cardTitle}`;
 
   return (
     <SpeechProvider language={language}>
@@ -770,11 +856,14 @@ export default function App() {
                 onRevisitSection={(idx, targetId) => openLessonAtIndex(idx, targetId)}
                 onSelectLesson={(idx) => openLessonAtIndex(idx)}
                 onOpenSandbox={() => handleOpenSandbox()}
+                onOpenFinishScreen={handleOpenFinishScreen}
               />
             ) : currentView === 'glossary' ? (
               <GlossaryPage
                 lessons={lessons}
                 unlockedMaxIndex={unlockedMaxIndex}
+                unlockedLessonIds={unlockedLessonIds}
+                lockReasonByLessonId={lockReasonByLessonId}
                 focusedTermKey={focusedGlossaryKey}
                 onSelectLesson={(idx) => openLessonAtIndex(idx)}
                 onBackToLessons={handleOpenLessonsPage}
@@ -809,6 +898,12 @@ export default function App() {
                 lessons={lessons}
                 onBackToApp={handleOpenLessonsPage}
               />
+            ) : currentView === 'finished' ? (
+              <FinishScreenPage
+                levels={roadmapLevels}
+                onOpenCheatSheet={handleOpenCheatSheet}
+                onBackToLessons={handleOpenLessonsPage}
+              />
             ) : (
               <LessonTranslationProvider value={translationContextValue}>
                 <div className="flex flex-col w-full" data-ask-selectable="true">
@@ -825,7 +920,7 @@ export default function App() {
                   <HeroSection
                     key={`hero-${activeLesson.id}-${language}`}
                     lesson={activeLesson}
-                    lessonIndex={activeLessonIndex}
+                    lessonIndex={activePlayableIndex}
                     totalLessons={playableLessons.length}
                     onBackToLessons={handleOpenLessonsPage}
                     onStartStepOne={() => {
@@ -907,7 +1002,7 @@ export default function App() {
                     key={`quiz-${activeLesson.id}-${language}`}
                     lessonId={activeLesson.id}
                     lessonTitle={activeLesson.cardTitle}
-                    lessonNumber={activeLessonIndex + 1}
+                    lessonNumber={activePlayableIndex + 1}
                     quiz={activeLesson.quiz}
                     quizzes={activeLesson.quizzes}
                     completion={activeLesson.completion}
@@ -915,13 +1010,10 @@ export default function App() {
                     onSelectAnswer={handleSelectQuizAnswer}
                     lessonCompleted={lessonCompleted}
                     onCompleteLesson={handleCompleteLesson}
-                    hasNextLesson={Boolean(
-                      lessons[activeLessonIndex + 1] && !lessons[activeLessonIndex + 1].comingSoon
-                    )}
+                    hasNextLesson={nextPlayableIndex !== -1}
                     onNextLesson={() => {
-                      const nextLesson = lessons[activeLessonIndex + 1];
-                      if (nextLesson && !nextLesson.comingSoon) {
-                        openLessonAtIndex(activeLessonIndex + 1);
+                      if (nextPlayableIndex !== -1) {
+                        openLessonAtIndex(nextPlayableIndex);
                       }
                     }}
                     onBackToLessons={handleOpenLessonsPage}
@@ -930,6 +1022,8 @@ export default function App() {
                         ? () => handleOpenSandbox(LESSON_SANDBOX_CHALLENGE[activeLesson.id])
                         : undefined
                     }
+                    allCourseCompleted={allLevelsCompleted}
+                    onOpenFinishScreen={handleOpenFinishScreen}
                   />
                 </div>
               </LessonTranslationProvider>

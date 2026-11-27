@@ -8,6 +8,7 @@ import {
   FileText,
   FolderGit2,
   GitBranch,
+  GitFork,
   GitPullRequest,
   History,
   HelpCircle,
@@ -394,6 +395,931 @@ function StuckScreenMockup({
               <span className="px-3 py-1.5 rounded bg-surface-container-high text-on-surface-variant/75 text-[11px] font-medium border border-outline-variant/40 cursor-not-allowed shrink-0">
                 Merge pull request
               </span>
+            </div>
+          </div>
+        )}
+
+        {situation.screenType === 'issues-tab-missing' && (
+          <div className="h-full rounded-lg bg-surface-container-lowest border border-outline-variant/35 p-3.5 flex flex-col justify-between">
+            <div className="flex items-center justify-between gap-2 text-[11px] border-b border-surface-container-high pb-2">
+              <div className="flex items-center gap-3">
+                <span className="text-on-surface-variant">&lt;&gt; Code</span>
+                <span className="text-on-surface-variant">Pull requests</span>
+              </div>
+              <span className="font-semibold text-primary border-b-2 border-primary pb-1">
+                Settings
+              </span>
+            </div>
+
+            <div className="rounded-lg border border-outline-variant/40 bg-surface-container-low/50 p-3 space-y-2 text-[11px]">
+              <span className="font-medium text-on-surface block">Features</span>
+              <div className="flex items-center gap-2 text-on-surface">
+                <span className="w-3.5 h-3.5 rounded bg-secondary text-on-secondary flex items-center justify-center">
+                  <Check className="w-2.5 h-2.5" />
+                </span>
+                <span>Issues</span>
+              </div>
+            </div>
+
+            <div className="rounded border border-outline-variant/35 bg-surface-container-low/40 px-3 py-2 text-[11px] text-on-surface-variant">
+              forked from <span className="font-mono text-primary">original-owner/project</span>
+            </div>
+          </div>
+        )}
+
+        {situation.screenType === 'issue-assign-someone' && (
+          <div className="h-full rounded-lg bg-surface-container-lowest border border-outline-variant/35 p-3.5 grid grid-cols-12 gap-3">
+            <div className="col-span-6 rounded border border-outline-variant/35 bg-surface-container-low/30 p-3 flex flex-col justify-between text-[11px]">
+              <div className="space-y-1.5">
+                <span className="font-medium text-on-surface block">New issue</span>
+                <span className="text-on-surface-variant block">
+                  Only collaborators can be assigned.
+                </span>
+              </div>
+              <span className="text-[10px] font-mono text-primary">
+                Settings → Collaborators
+              </span>
+            </div>
+
+            <div className="col-span-6 rounded border border-outline-variant/45 bg-surface-container-lowest p-3 space-y-2 text-[11px]">
+              <div className="font-medium text-primary border-b border-surface-container-high pb-1.5">
+                Assignees
+              </div>
+              <div className="px-2 py-1 rounded bg-secondary-container/35 text-secondary font-medium">
+                @alex-dev (Collaborator)
+              </div>
+              <div className="px-2 py-1 rounded border border-outline-variant/30 text-on-surface-variant">
+                Assign yourself
+              </div>
+            </div>
+          </div>
+        )}
+
+        {situation.screenType === 'issue-closed-mistake' && (
+          <div className="h-full rounded-lg bg-surface-container-lowest border border-outline-variant/35 p-3.5 flex flex-col justify-between">
+            <div className="flex items-center gap-3 text-[11px] border-b border-surface-container-high pb-2">
+              <span className="text-on-surface-variant">2 Open</span>
+              <span className="font-semibold text-primary border-b-2 border-primary pb-1">
+                1 Closed
+              </span>
+            </div>
+
+            <div className="rounded border border-outline-variant/35 bg-surface-container-low/50 px-3 py-2.5 text-[11px]">
+              <span className="font-medium text-on-surface block">
+                #3 Button is hard to see on mobile
+              </span>
+              <span className="text-on-surface-variant text-[10px]">Closed just now</span>
+            </div>
+
+            <div className="flex justify-end pt-1">
+              <span className="px-3 py-1.5 rounded border border-primary/45 bg-primary-fixed/25 text-primary text-[11px] font-medium">
+                Reopen issue
+              </span>
+            </div>
+          </div>
+        )}
+
+        {situation.screenType === 'fork-button-missing' && (
+          <div className="h-full rounded-lg bg-surface-container-lowest border border-outline-variant/35 p-3.5 flex flex-col justify-between">
+            <div className="flex items-center justify-between gap-2 pb-2 border-b border-surface-container-high text-[11px]">
+              <span className="font-mono text-on-surface truncate">
+                original-owner / <span className="font-semibold">sample-project</span>
+              </span>
+              <div className="flex items-center gap-1.5 shrink-0">
+                <span className="px-2 py-0.5 rounded border border-outline-variant/40 text-on-surface-variant hidden sm:inline">
+                  Watch 3
+                </span>
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded border border-primary/50 bg-primary-fixed/25 text-primary font-medium">
+                  <GitFork className="w-3 h-3" />
+                  <span>Fork 12</span>
+                </span>
+                <span className="px-2 py-0.5 rounded border border-outline-variant/40 text-on-surface-variant hidden sm:inline">
+                  Star 40
+                </span>
+              </div>
+            </div>
+
+            <div className="rounded-lg border border-outline-variant/40 bg-surface-container-low/50 p-3 text-center text-[11px] space-y-1">
+              <span className="font-medium text-on-surface block">
+                Top-right buttons can hide on narrow screens
+              </span>
+              <span className="text-on-surface-variant block">
+                Widen your browser window or open GitHub on a computer.
+              </span>
+            </div>
+
+            <div className="flex items-center justify-between text-[11px] text-on-surface-variant border-t border-surface-container-high pt-2">
+              <span>Account status</span>
+              <span className="px-2.5 py-1 rounded bg-secondary text-on-secondary font-medium">
+                Signed in
+              </span>
+            </div>
+          </div>
+        )}
+
+        {situation.screenType === 'fork-own-repo' && (
+          <div className="h-full rounded-lg bg-surface-container-lowest border border-outline-variant/35 p-3.5 flex flex-col justify-between">
+            <div className="flex items-center justify-between gap-2 pb-2 border-b border-surface-container-high text-[11px]">
+              <span className="font-mono text-on-surface">
+                <span className="text-primary font-semibold">your-username</span> / my-first-project
+              </span>
+              <span className="text-[10px] px-2 py-0.5 rounded border border-outline-variant/40 text-on-surface-variant">
+                Your repository
+              </span>
+            </div>
+
+            <div className="flex items-center justify-between gap-2 rounded-lg border border-outline-variant/40 bg-surface-container-low/50 p-3 text-[11px]">
+              <span className="inline-flex items-center gap-1.5 font-mono text-on-surface">
+                <GitBranch className="w-3.5 h-3.5 text-secondary" />
+                <span>main</span>
+              </span>
+              <span className="px-2.5 py-1 rounded border border-primary/45 bg-primary-fixed/25 text-primary font-medium">
+                Add file ▾
+              </span>
+            </div>
+
+            <div className="rounded border border-outline-variant/35 bg-surface-container-low/40 px-3 py-2 text-[11px] text-on-surface-variant">
+              You already own this project—edit files directly or make a branch instead of forking.
+            </div>
+          </div>
+        )}
+
+        {situation.screenType === 'fork-already-exists' && (
+          <div className="h-full rounded-lg bg-surface-container-lowest border border-outline-variant/35 overflow-hidden flex flex-col">
+            <div className="px-3 py-2 border-b border-surface-container-high bg-surface-container-low/50 flex items-center justify-between gap-2 text-[11px]">
+              <span className="text-primary font-medium">You already have a fork</span>
+              <div className="w-6 h-6 rounded-full bg-primary text-on-primary flex items-center justify-center">
+                <User className="w-3.5 h-3.5" />
+              </div>
+            </div>
+
+            <div className="flex-1 grid grid-cols-12 p-2.5 gap-2.5 text-[11px]">
+              <div className="col-span-6 rounded border border-outline-variant/40 bg-surface-container-low/40 p-2.5 flex flex-col justify-end">
+                <div className="font-mono text-primary font-medium truncate">
+                  your-username/sample-project
+                </div>
+                <div className="text-[10px] text-on-surface-variant truncate">
+                  forked from original-owner/sample-project
+                </div>
+              </div>
+
+              <div className="col-span-6">
+                <div className="ml-auto w-36 rounded-lg border border-outline-variant/45 bg-surface-container-lowest shadow-sm py-1 text-[11px]">
+                  <div className="px-3 py-1.5 text-on-surface-variant">Your profile</div>
+                  <div className="px-3 py-1.5 bg-primary-fixed/30 text-primary font-medium">
+                    Your repositories
+                  </div>
+                  <div className="px-3 py-1.5 text-on-surface-variant">Your stars</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {situation.screenType === 'settings-tab-missing' && (
+          <div className="h-full rounded-lg bg-surface-container-lowest border border-outline-variant/35 p-3.5 flex flex-col justify-between">
+            <div className="flex items-center justify-between gap-2 pb-2 border-b border-surface-container-high text-[11px]">
+              <span className="font-mono text-on-surface">
+                <span className="text-primary font-semibold">someone-else</span> / sample-project
+              </span>
+              <span className="text-[10px] px-2 py-0.5 rounded border border-outline-variant/40 text-on-surface-variant">
+                Viewer access
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2 overflow-hidden border-b border-surface-container-high pb-2 text-[11px]">
+              <span className="font-semibold text-on-surface">Code</span>
+              <span className="text-on-surface-variant">Issues</span>
+              <span className="text-on-surface-variant">Pull requests</span>
+              <span className="text-on-surface-variant">Insights</span>
+              <span className="ml-auto px-2 py-0.5 rounded border border-dashed border-primary/50 text-primary text-[10px]">
+                Settings hidden
+              </span>
+            </div>
+
+            <div className="rounded border border-outline-variant/35 bg-surface-container-low/40 px-3 py-2 text-[11px] text-on-surface-variant">
+              Only owners and admins see the Settings tab on a repository.
+            </div>
+          </div>
+        )}
+
+        {situation.screenType === 'tab-missing' && (
+          <div className="h-full rounded-lg bg-surface-container-lowest border border-outline-variant/35 p-3.5 flex flex-col justify-between">
+            <div className="flex items-center justify-between gap-2 pb-2 border-b border-surface-container-high text-[11px]">
+              <div className="flex items-center gap-2 text-on-surface-variant">
+                <span>Code</span>
+                <span>Pull requests</span>
+                <span>Insights</span>
+              </div>
+              <span className="px-2 py-0.5 rounded bg-primary-fixed/30 text-primary font-semibold">
+                Settings
+              </span>
+            </div>
+
+            <div className="rounded border border-outline-variant/35 bg-surface-container-low/45 p-2.5 space-y-1.5 text-[11px]">
+              <div className="font-semibold text-on-surface text-[10px] uppercase tracking-wider">
+                Features
+              </div>
+              <div className="flex items-center gap-2 text-on-surface">
+                <span className="w-3.5 h-3.5 rounded border border-outline-variant/60 bg-surface-container-lowest inline-block" />
+                <span>Wikis</span>
+              </div>
+              <div className="flex items-center gap-2 text-primary font-medium">
+                <span className="w-3.5 h-3.5 rounded border border-primary bg-primary text-on-primary text-[9px] flex items-center justify-center">
+                  ✓
+                </span>
+                <span>Issues</span>
+              </div>
+              <div className="flex items-center gap-2 text-on-surface">
+                <span className="w-3.5 h-3.5 rounded border border-outline-variant/60 bg-surface-container-lowest inline-block" />
+                <span>Projects</span>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {situation.screenType === 'actions-no-runs' && (
+          <div className="h-full rounded-lg bg-surface-container-lowest border border-outline-variant/35 p-3.5 flex flex-col justify-between">
+            <div className="flex items-center gap-3 pb-2 border-b border-surface-container-high text-[11px]">
+              <span className="text-on-surface-variant">Code</span>
+              <span className="text-on-surface-variant">Issues</span>
+              <span className="font-semibold text-primary border-b-2 border-primary pb-0.5">
+                Actions
+              </span>
+              <span className="text-on-surface-variant">Projects</span>
+            </div>
+
+            <div className="rounded border border-outline-variant/35 bg-surface-container-low/45 p-3 flex items-center justify-between gap-2 text-[11px]">
+              <span className="px-2.5 py-1 rounded border border-primary/50 bg-primary-fixed/25 text-primary font-medium">
+                New workflow
+              </span>
+              <span className="text-on-surface-variant">0 workflow runs yet</span>
+            </div>
+
+            <div className="flex justify-end text-[11px]">
+              <span className="px-2.5 py-1 rounded bg-secondary text-on-secondary font-medium">
+                Configure → Commit changes
+              </span>
+            </div>
+          </div>
+        )}
+
+        {situation.screenType === 'actions-red-cross' && (
+          <div className="h-full rounded-lg bg-surface-container-lowest border border-outline-variant/35 p-3.5 flex flex-col justify-between">
+            <div className="rounded border border-primary/35 bg-primary-fixed/20 px-3 py-2 flex items-center gap-2 text-[11px]">
+              <span className="w-4 h-4 rounded-full bg-primary text-on-primary text-[10px] font-bold flex items-center justify-center">
+                ✕
+              </span>
+              <span className="font-medium text-on-surface">Fix a typo (Click run)</span>
+            </div>
+
+            <div className="rounded border border-outline-variant/35 bg-surface-container-low/45 px-3 py-2 text-[11px] flex items-center justify-between">
+              <span className="text-primary font-medium">✕ Check HTML step</span>
+              <span className="text-[10px] text-on-surface-variant">Click failed step</span>
+            </div>
+
+            <div className="rounded border border-outline-variant/35 bg-surface-container-lowest px-3 py-2 font-mono text-[10px] text-on-surface-variant">
+              Error: Missing closing tag on line 4
+            </div>
+          </div>
+        )}
+
+        {situation.screenType === 'projects-cant-create' && (
+          <div className="h-full rounded-lg bg-surface-container-lowest border border-outline-variant/35 p-3.5 flex flex-col justify-between">
+            <div className="flex items-center justify-between gap-2 pb-2 border-b border-surface-container-high text-[11px]">
+              <div className="flex items-center gap-2">
+                <span className="text-on-surface-variant">Code</span>
+                <span className="font-semibold text-primary border-b-2 border-primary pb-0.5">
+                  Projects
+                </span>
+              </div>
+              <span className="px-2 py-0.5 rounded border border-outline-variant/50 text-on-surface font-medium">
+                + New project
+              </span>
+            </div>
+
+            <div className="my-auto rounded border border-outline-variant/35 bg-surface-container-low/45 p-3 text-center space-y-2 text-[11px]">
+              <span className="block text-on-surface-variant">
+                Choose a layout for your tasks
+              </span>
+              <span className="inline-block px-3 py-1 rounded bg-secondary text-on-secondary font-medium">
+                New project → Board
+              </span>
+            </div>
+          </div>
+        )}
+
+        {situation.screenType === 'projects-cant-drag' && (
+          <div className="h-full rounded-lg bg-surface-container-lowest border border-outline-variant/35 p-3.5 flex flex-col justify-between">
+            <div className="flex items-center justify-between gap-2 pb-2 border-b border-surface-container-high text-[11px]">
+              <span className="font-mono text-on-surface">
+                <span className="text-primary font-semibold">someone-else</span> / board
+              </span>
+              <span className="text-[10px] px-2 py-0.5 rounded border border-outline-variant/40 text-on-surface-variant">
+                Read-only
+              </span>
+            </div>
+
+            <div className="grid grid-cols-2 gap-2 text-[11px]">
+              <div className="rounded border border-outline-variant/40 bg-surface-container-low/45 p-2">
+                <div className="font-medium text-on-surface mb-1">Todo</div>
+                <div className="rounded bg-surface-container-lowest border border-outline-variant/40 p-1.5 text-[10px] text-on-surface-variant">
+                  Task card (locked)
+                </div>
+              </div>
+              <div className="rounded border border-outline-variant/40 bg-surface-container-low/45 p-2">
+                <div className="font-medium text-primary mb-1">Write access</div>
+                <div className="text-[10px] text-on-surface-variant">
+                  Needed to drag cards
+                </div>
+              </div>
+            </div>
+
+            <div className="text-[10px] text-on-surface-variant text-center">
+              Ask the owner for write access or make your own project.
+            </div>
+          </div>
+        )}
+
+        {situation.screenType === 'wiki-tab-missing' && (
+          <div className="h-full rounded-lg bg-surface-container-lowest border border-outline-variant/35 p-3.5 flex flex-col justify-between">
+            <div className="flex items-center justify-between gap-2 pb-2 border-b border-surface-container-high text-[11px]">
+              <div className="flex items-center gap-2 text-on-surface-variant">
+                <span>Code</span>
+                <span>Issues</span>
+                <span>Projects</span>
+              </div>
+              <span className="px-2 py-0.5 rounded bg-primary-fixed/30 text-primary font-semibold">
+                Settings
+              </span>
+            </div>
+
+            <div className="rounded border border-outline-variant/35 bg-surface-container-low/45 p-2.5 space-y-1.5 text-[11px]">
+              <div className="font-semibold text-on-surface text-[10px] uppercase tracking-wider">
+                Features
+              </div>
+              <div className="flex items-center gap-2 text-primary font-medium">
+                <span className="w-3.5 h-3.5 rounded border border-primary bg-primary text-on-primary text-[9px] flex items-center justify-center">
+                  ✓
+                </span>
+                <span>Wikis</span>
+              </div>
+              <div className="flex items-center gap-2 text-on-surface-variant">
+                <span className="w-3.5 h-3.5 rounded border border-outline-variant/60 bg-surface-container-lowest inline-block" />
+                <span>Issues</span>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {situation.screenType === 'wiki-not-in-files' && (
+          <div className="h-full rounded-lg bg-surface-container-lowest border border-outline-variant/35 p-3.5 flex flex-col justify-between">
+            <div className="flex items-center gap-3 pb-2 border-b border-surface-container-high text-[11px]">
+              <span className="text-on-surface-variant">Code (files)</span>
+              <span className="text-on-surface-variant">Issues</span>
+              <span className="text-on-surface-variant">Projects</span>
+              <span className="font-semibold text-primary border-b-2 border-primary pb-0.5">
+                Wiki
+              </span>
+            </div>
+
+            <div className="grid grid-cols-12 gap-2 text-[11px] flex-1 pt-2">
+              <div className="col-span-7 rounded border border-outline-variant/35 bg-surface-container-low/40 p-2.5">
+                <div className="font-medium text-on-surface mb-1">Project Guide</div>
+                <div className="text-[10px] text-on-surface-variant">
+                  Saved in Wiki, separate from Code files.
+                </div>
+              </div>
+              <div className="col-span-5 rounded border border-primary/35 bg-primary-fixed/15 p-2.5 space-y-1">
+                <div className="font-semibold text-primary text-[10px]">Pages</div>
+                <div className="text-[10px] text-on-surface">• Home</div>
+                <div className="text-[10px] text-on-surface">• Rules</div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {situation.screenType === 'security-tab-missing' && (
+          <div className="h-full rounded-lg bg-surface-container-lowest border border-outline-variant/35 p-3.5 flex flex-col justify-between">
+            <div className="flex items-center gap-2 overflow-hidden pb-2 border-b border-surface-container-high text-[11px]">
+              <span className="text-on-surface-variant">Code</span>
+              <span className="text-on-surface-variant">Wiki</span>
+              <span className="px-2 py-0.5 rounded bg-primary-fixed/30 text-primary font-semibold">
+                Security / Security and quality
+              </span>
+              <span className="text-on-surface-variant">Insights</span>
+            </div>
+
+            <div className="rounded border border-outline-variant/35 bg-surface-container-low/45 p-2.5 text-[11px] space-y-1">
+              <div className="font-medium text-on-surface">Owner vs. Visitor view</div>
+              <div className="text-[10px] text-on-surface-variant">
+                Owners see every alert; visitors see only the public security policy.
+              </div>
+            </div>
+
+            <div className="text-[10px] text-on-surface-variant text-center">
+              Open one of your own repositories to manage all safety checks.
+            </div>
+          </div>
+        )}
+
+        {situation.screenType === 'security-dependabot-disabled' && (
+          <div className="h-full rounded-lg bg-surface-container-lowest border border-outline-variant/35 p-3.5 flex flex-col justify-between">
+            <div className="flex items-center gap-3 pb-2 border-b border-surface-container-high text-[11px]">
+              <span className="text-on-surface-variant">Wiki</span>
+              <span className="font-semibold text-primary border-b-2 border-primary pb-0.5">
+                Security and quality
+              </span>
+              <span className="text-on-surface-variant">Insights</span>
+            </div>
+
+            <div className="my-auto rounded border border-outline-variant/40 bg-surface-container-low/45 p-3 flex items-center justify-between gap-2 text-[11px]">
+              <div>
+                <div className="font-medium text-on-surface">Dependabot alerts</div>
+                <div className="text-[10px] text-on-surface-variant">Status: Disabled</div>
+              </div>
+              <span className="px-2.5 py-1 rounded bg-secondary text-on-secondary font-medium whitespace-nowrap">
+                Enable Dependabot alerts
+              </span>
+            </div>
+          </div>
+        )}
+
+        {situation.screenType === 'insights-community-discussions' && (
+          <div className="h-full rounded-lg bg-surface-container-lowest border border-outline-variant/35 p-3.5 flex flex-col justify-between">
+            <div className="grid grid-cols-12 gap-2.5 flex-1 text-[11px]">
+              <div className="col-span-5 rounded border border-outline-variant/35 bg-surface-container-low/40 p-2 space-y-1">
+                <div className="text-primary font-medium">Pulse</div>
+                <div className="text-on-surface-variant">Traffic</div>
+                <div className="px-1.5 py-0.5 rounded bg-primary-fixed/25 text-on-surface font-medium">
+                  Community
+                </div>
+              </div>
+              <div className="col-span-7 rounded border border-outline-variant/35 bg-surface-container-low/30 p-2.5 flex flex-col justify-between">
+                <div className="font-medium text-on-surface">Discussions</div>
+                <div className="text-[10px] text-on-surface-variant">
+                  Optional feature — you can safely skip this item.
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {situation.screenType === 'insights-dependency-disabled' && (
+          <div className="h-full rounded-lg bg-surface-container-lowest border border-outline-variant/35 p-3.5 flex flex-col justify-between">
+            <div className="grid grid-cols-12 gap-2.5 flex-1 text-[11px]">
+              <div className="col-span-5 rounded border border-outline-variant/35 bg-surface-container-low/40 p-2 space-y-1">
+                <div className="text-on-surface-variant">Pulse</div>
+                <div className="text-on-surface-variant">Commits</div>
+                <div className="px-1.5 py-0.5 rounded bg-primary-fixed/25 text-primary font-medium">
+                  Dependency graph
+                </div>
+              </div>
+              <div className="col-span-7 rounded border border-outline-variant/35 bg-surface-container-low/30 p-2.5 flex flex-col justify-between">
+                <div className="text-[10px] text-on-surface-variant">
+                  Dependency graph is disabled.
+                </div>
+                <span className="inline-block px-2 py-1 rounded bg-secondary text-on-secondary text-[10px] font-medium text-center">
+                  Enable the dependency graph
+                </span>
+              </div>
+            </div>
+            <div className="text-[10px] text-on-surface-variant text-center pt-1.5">
+              Optional for simple HTML or note repositories.
+            </div>
+          </div>
+        )}
+
+        {situation.screenType === 'settings-cant-see' && (
+          <div className="h-full rounded-lg bg-surface-container-lowest border border-outline-variant/35 p-3.5 flex flex-col justify-between">
+            <div className="flex items-center justify-between gap-2 pb-2 border-b border-surface-container-high text-[11px]">
+              <span className="font-mono text-on-surface">
+                <span className="text-primary font-semibold">someone-else</span> / sample-project
+              </span>
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded border border-primary/45 bg-primary-fixed/25 text-primary font-medium">
+                <GitFork className="w-3 h-3" />
+                <span>Fork</span>
+              </span>
+            </div>
+
+            <div className="rounded border border-outline-variant/35 bg-surface-container-low/45 p-2.5 text-[11px] flex items-center justify-between">
+              <span className="font-mono text-on-surface">your-username / sample-project</span>
+              <span className="px-2 py-0.5 rounded bg-secondary text-on-secondary text-[10px] font-medium">
+                Settings visible
+              </span>
+            </div>
+
+            <div className="text-[10px] text-on-surface-variant text-center">
+              Fork someone else’s repository to get your own copy with Settings.
+            </div>
+          </div>
+        )}
+
+        {situation.screenType === 'agents-upgrade-page' && (
+          <div className="h-full rounded-lg bg-surface-container-lowest border border-outline-variant/35 p-3.5 flex flex-col justify-between">
+            <div className="flex items-center gap-3 pb-2 border-b border-surface-container-high text-[11px]">
+              <span className="px-2 py-0.5 rounded bg-primary-fixed/25 text-primary font-medium">
+                Code
+              </span>
+              <span className="text-on-surface-variant">Issues</span>
+              <span className="font-semibold text-on-surface">Agents</span>
+            </div>
+
+            <div className="my-auto rounded border border-outline-variant/35 bg-surface-container-low/45 p-3 text-center space-y-2 text-[11px]">
+              <div className="font-medium text-on-surface">Do more with Copilot</div>
+              <span className="inline-block px-2.5 py-1 rounded border border-outline-variant/50 text-on-surface-variant text-[10px]">
+                Upgrade to Copilot Pro (not needed)
+              </span>
+            </div>
+          </div>
+        )}
+
+        {situation.screenType === 'agents-tab-missing' && (
+          <div className="h-full rounded-lg bg-surface-container-lowest border border-outline-variant/35 p-3.5 flex flex-col justify-between">
+            <div className="flex items-center gap-2 overflow-hidden pb-2 border-b border-surface-container-high text-[11px]">
+              <span className="text-on-surface-variant">Code</span>
+              <span className="text-on-surface-variant">Pull requests</span>
+              <span className="px-2 py-0.5 rounded border border-dashed border-primary/50 text-primary text-[10px]">
+                Agents (rolling out)
+              </span>
+              <span className="text-on-surface-variant">Actions</span>
+            </div>
+
+            <div className="rounded border border-outline-variant/35 bg-surface-container-low/45 p-2.5 text-[11px] text-center text-on-surface-variant">
+              GitHub adds Agents gradually and features vary by account.
+            </div>
+
+            <div className="text-[10px] text-secondary font-medium text-center">
+              All core GitHub tabs still work normally without it.
+            </div>
+          </div>
+        )}
+
+        {situation.screenType === 'release-cant-find-create' && (
+          <div className="h-full rounded-lg bg-surface-container-lowest border border-outline-variant/35 p-3.5 flex flex-col justify-between">
+            <div className="flex items-center gap-3 pb-2 border-b border-surface-container-high text-[11px]">
+              <span className="font-semibold text-primary border-b-2 border-primary pb-0.5">
+                Code
+              </span>
+              <span className="text-on-surface-variant">Issues</span>
+              <span className="text-on-surface-variant">Pull requests</span>
+            </div>
+
+            <div className="grid grid-cols-12 gap-2.5 flex-1 pt-2 text-[11px]">
+              <div className="col-span-7 rounded border border-outline-variant/35 bg-surface-container-low/40 p-2.5 space-y-1">
+                <div className="font-mono text-[10px] text-on-surface">README.md</div>
+                <div className="font-mono text-[10px] text-on-surface">index.html</div>
+              </div>
+              <div className="col-span-5 rounded border border-primary/35 bg-primary-fixed/15 p-2.5 flex flex-col justify-between">
+                <div>
+                  <div className="font-semibold text-on-surface text-[10px]">Releases</div>
+                  <div className="text-[10px] text-on-surface-variant">No releases published</div>
+                </div>
+                <span className="text-[10px] font-medium text-primary underline">
+                  Create a new release
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {situation.screenType === 'release-publish-greyed' && (
+          <div className="h-full rounded-lg bg-surface-container-lowest border border-outline-variant/35 p-3.5 flex flex-col justify-between">
+            <div className="space-y-1.5 text-[11px]">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded border border-primary/45 bg-primary-fixed/20 text-primary font-medium">
+                <span>Choose a tag:</span>
+                <span className="font-mono">v1.0.0</span>
+              </div>
+              <div className="rounded border border-outline-variant/35 bg-surface-container-low/45 px-2.5 py-1.5 text-[10px] text-on-surface">
+                + Create new tag: <span className="font-mono font-semibold">v1.0.0</span> on publish
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between pt-2 border-t border-surface-container-high text-[11px]">
+              <span className="px-2.5 py-1 rounded bg-secondary text-on-secondary font-medium">
+                Publish release
+              </span>
+              <span className="text-[10px] text-on-surface-variant">
+                Needs a tag before publishing
+              </span>
+            </div>
+          </div>
+        )}
+
+        {situation.screenType === 'release-attach-binaries' && (
+          <div className="h-full rounded-lg bg-surface-container-lowest border border-outline-variant/35 p-3.5 flex flex-col justify-between text-[11px]">
+            <div className="rounded border border-outline-variant/35 bg-surface-container-low/45 p-2 flex items-center justify-between text-[10px]">
+              <span className="font-mono text-on-surface">Source code (zip)</span>
+              <span className="text-secondary font-medium">Added automatically</span>
+            </div>
+
+            <div className="rounded border border-dashed border-primary/50 bg-primary-fixed/15 p-2.5 text-center text-[10px] text-on-surface">
+              Attach binaries by dropping them here or{' '}
+              <span className="text-primary font-medium underline">selecting them</span>
+            </div>
+
+            <div className="flex justify-end">
+              <span className="px-2.5 py-1 rounded bg-secondary text-on-secondary text-[10px] font-medium">
+                Publish release
+              </span>
+            </div>
+          </div>
+        )}
+
+        {situation.screenType === 'pages-404-error' && (
+          <div className="h-full rounded-lg bg-surface-container-lowest border border-outline-variant/35 p-3.5 flex flex-col justify-between text-[11px]">
+            <div className="grid grid-cols-12 gap-2.5">
+              <div className="col-span-6 rounded border border-primary/40 bg-primary-fixed/15 p-2 space-y-1">
+                <div className="text-[10px] text-on-surface-variant">Root folder /</div>
+                <div className="font-mono text-[10px] text-primary font-semibold">index.html ✓</div>
+              </div>
+              <div className="col-span-6 rounded border border-outline-variant/35 bg-surface-container-low/45 p-2 space-y-1">
+                <div className="text-[10px] text-on-surface-variant">Pages branch</div>
+                <div className="font-mono text-[10px] text-on-surface">main · / (root)</div>
+              </div>
+            </div>
+
+            <div className="rounded border border-outline-variant/35 bg-surface-container-low/40 p-2 text-center text-[10px] text-on-surface-variant">
+              Wait 1–2 minutes after saving, then refresh your site URL.
+            </div>
+          </div>
+        )}
+
+        {situation.screenType === 'pages-cant-find-settings' && (
+          <div className="h-full rounded-lg bg-surface-container-lowest border border-outline-variant/35 p-3.5 flex flex-col justify-between text-[11px]">
+            <div className="flex items-center justify-between pb-2 border-b border-surface-container-high">
+              <span className="font-mono text-[10px] text-on-surface">
+                your-username / my-first-project
+              </span>
+              <span className="px-2 py-0.5 rounded bg-primary-fixed/30 text-primary font-semibold text-[10px]">
+                Settings
+              </span>
+            </div>
+
+            <div className="rounded border border-outline-variant/35 bg-surface-container-low/45 p-2 text-[10px] text-on-surface-variant text-center">
+              Public repositories get GitHub Pages free; private repos may need a paid plan.
+            </div>
+
+            <div className="flex items-center gap-2">
+              <span className="px-2.5 py-1 rounded border border-primary/45 bg-primary-fixed/20 text-primary font-medium text-[10px]">
+                Settings → Pages
+              </span>
+              <span className="text-[10px] text-on-surface-variant">Visible to repository owners</span>
+            </div>
+          </div>
+        )}
+
+        {situation.screenType === 'gist-create-greyed' && (
+          <div className="h-full rounded-lg bg-surface-container-lowest border border-outline-variant/35 p-3.5 flex flex-col justify-between text-[11px]">
+            <div className="space-y-1.5">
+              <div className="rounded border border-primary/40 bg-primary-fixed/15 px-2.5 py-1 font-mono text-[10px] text-primary">
+                hello.py
+              </div>
+              <div className="rounded border border-outline-variant/35 bg-surface-container-low/45 p-2 font-mono text-[10px] text-on-surface">
+                print("Hello, world!")
+              </div>
+            </div>
+
+            <div className="flex justify-end pt-2 border-t border-surface-container-high">
+              <span className="px-2.5 py-1 rounded bg-secondary text-on-secondary text-[10px] font-medium">
+                Create secret gist
+              </span>
+            </div>
+          </div>
+        )}
+
+        {situation.screenType === 'gist-delete' && (
+          <div className="h-full rounded-lg bg-surface-container-lowest border border-outline-variant/35 p-3.5 flex flex-col justify-between text-[11px]">
+            <div className="flex items-center justify-between pb-2 border-b border-surface-container-high">
+              <span className="font-mono text-[10px] text-on-surface">
+                alex-dev / hello.py
+              </span>
+              <div className="flex items-center gap-1.5 text-[10px]">
+                <span className="px-2 py-0.5 rounded border border-outline-variant/50 text-on-surface-variant">
+                  Edit
+                </span>
+                <span className="px-2 py-0.5 rounded border border-primary/50 bg-primary-fixed/25 text-primary font-semibold">
+                  Delete
+                </span>
+              </div>
+            </div>
+
+            <div className="rounded border border-outline-variant/35 bg-surface-container-low/45 p-2.5 text-center text-[10px] text-on-surface-variant">
+              Open your gist page and click Delete to remove it.
+            </div>
+          </div>
+        )}
+
+        {situation.screenType === 'profile-readme-not-showing' && (
+          <div className="h-full rounded-lg bg-surface-container-lowest border border-outline-variant/35 p-3.5 flex flex-col justify-between text-[11px]">
+            <div className="flex items-center justify-between pb-2 border-b border-surface-container-high">
+              <span className="font-mono text-[10px] text-on-surface">
+                <span className="text-primary font-semibold">alex-dev</span> /{' '}
+                <span className="text-primary font-semibold">alex-dev</span>
+              </span>
+              <span className="px-2 py-0.5 rounded border border-secondary/40 bg-secondary/10 text-secondary text-[10px] font-medium">
+                Public
+              </span>
+            </div>
+
+            <div className="rounded border border-outline-variant/35 bg-surface-container-low/45 p-2.5 flex items-center justify-between text-[10px]">
+              <span className="font-mono font-semibold text-on-surface">README.md</span>
+              <span className="text-on-surface-variant">Branch: main ✓</span>
+            </div>
+
+            <div className="text-[10px] text-on-surface-variant text-center">
+              All three must match for your welcome box to appear.
+            </div>
+          </div>
+        )}
+
+        {situation.screenType === 'profile-secret-message-missing' && (
+          <div className="h-full rounded-lg bg-surface-container-lowest border border-outline-variant/35 p-3.5 flex flex-col justify-between text-[11px]">
+            <div className="grid grid-cols-12 gap-2 items-center">
+              <div className="col-span-5 rounded border border-outline-variant/40 bg-surface-container-low/45 px-2 py-1 font-mono text-[10px] text-on-surface">
+                Owner: alex-dev
+              </div>
+              <div className="col-span-1 text-center text-on-surface-variant">/</div>
+              <div className="col-span-6 rounded border border-primary/45 bg-primary-fixed/15 px-2 py-1 font-mono text-[10px] text-primary font-semibold">
+                alex-dev
+              </div>
+            </div>
+
+            <div className="rounded border border-secondary/40 bg-secondary/10 p-2.5 text-center text-[10px] text-secondary font-medium">
+              You found a secret! alex-dev/alex-dev is a special repository.
+            </div>
+          </div>
+        )}
+
+        {situation.screenType === 'git-command-not-found' && (
+          <div className="h-full rounded-lg bg-[#161b22] text-[#e6edf3] border border-outline-variant/40 p-3.5 flex flex-col justify-between font-mono text-[10px]">
+            <div className="flex items-center justify-between pb-2 border-b border-white/10">
+              <span className="text-white/70">Close & reopen terminal</span>
+              <span className="px-2 py-0.5 rounded bg-white/10 text-emerald-300">Git Bash</span>
+            </div>
+
+            <div className="rounded bg-white/5 border border-white/10 p-2.5 space-y-1">
+              <div className="text-emerald-300">$ git --version</div>
+              <div className="text-white/85">git version 2.47.0</div>
+            </div>
+
+            <div className="text-white/65 text-center">
+              Windows users: search for Git Bash in Start.
+            </div>
+          </div>
+        )}
+
+        {situation.screenType === 'git-mac-developer-tools' && (
+          <div className="h-full rounded-lg bg-surface-container-lowest border border-outline-variant/35 p-3.5 flex flex-col justify-between text-[11px]">
+            <div className="rounded border border-outline-variant/40 bg-surface-container-low/45 p-2.5 space-y-1.5">
+              <div className="font-medium text-on-surface text-[10px]">
+                The &quot;git&quot; command requires the command line developer tools.
+              </div>
+              <div className="flex justify-end gap-1.5 pt-1">
+                <span className="px-2 py-0.5 rounded border border-outline-variant/45 text-[10px] text-on-surface-variant">
+                  Cancel
+                </span>
+                <span className="px-2.5 py-0.5 rounded bg-primary text-on-primary text-[10px] font-medium">
+                  Install
+                </span>
+              </div>
+            </div>
+
+            <div className="rounded bg-[#161b22] text-emerald-300 font-mono text-[10px] px-2.5 py-1.5 text-center">
+              $ git --version → git version 2.47.0
+            </div>
+          </div>
+        )}
+
+        {situation.screenType === 'git-repo-not-found' && (
+          <div className="h-full rounded-lg bg-surface-container-lowest border border-outline-variant/35 p-3.5 flex flex-col justify-between text-[11px]">
+            <div className="flex items-center justify-between pb-2 border-b border-surface-container-high">
+              <span className="font-mono text-[10px] text-on-surface">
+                your-username / my-first-project
+              </span>
+              <span className="px-2.5 py-0.5 rounded bg-secondary text-on-secondary text-[10px] font-medium">
+                &lt;&gt; Code
+              </span>
+            </div>
+
+            <div className="rounded border border-primary/40 bg-primary-fixed/15 p-2 space-y-1">
+              <div className="text-[10px] font-semibold text-primary">HTTPS</div>
+              <div className="font-mono text-[10px] text-on-surface truncate">
+                https://github.com/your-username/my-first-project.git
+              </div>
+            </div>
+
+            <div className="font-mono text-[10px] text-on-surface-variant text-center">
+              git clone https://github.com/...git
+            </div>
+          </div>
+        )}
+
+        {situation.screenType === 'git-not-a-repo' && (
+          <div className="h-full rounded-lg bg-[#161b22] text-[#e6edf3] border border-outline-variant/40 p-3.5 flex flex-col justify-between font-mono text-[10px]">
+            <div className="text-amber-300">
+              $ pwd → /Users/alex (outside folder)
+            </div>
+            <div className="rounded bg-white/5 border border-emerald-400/35 px-2.5 py-1.5 text-emerald-300">
+              $ cd my-first-project
+            </div>
+            <div className="text-white/85">
+              $ git status → On branch main · working tree clean
+            </div>
+          </div>
+        )}
+
+        {situation.screenType === 'git-nothing-to-commit' && (
+          <div className="h-full rounded-lg bg-[#161b22] text-[#e6edf3] border border-outline-variant/40 p-3.5 flex flex-col justify-between font-mono text-[10px]">
+            <div className="text-rose-300">
+              nothing added to commit (untracked: hello.txt)
+            </div>
+            <div className="rounded bg-white/5 border border-emerald-400/35 px-2.5 py-1.5 text-emerald-300">
+              $ git add hello.txt
+            </div>
+            <div className="text-white/85">
+              $ git commit -m &quot;Add hello.txt&quot;
+            </div>
+          </div>
+        )}
+
+        {situation.screenType === 'git-tell-me-who-you-are' && (
+          <div className="h-full rounded-lg bg-[#161b22] text-[#e6edf3] border border-outline-variant/40 p-3.5 flex flex-col justify-between font-mono text-[10px]">
+            <div className="rounded bg-white/5 border border-emerald-400/35 px-2.5 py-1.5 text-emerald-300 truncate">
+              $ git config --global user.name &quot;Your Name&quot;
+            </div>
+            <div className="rounded bg-white/5 border border-emerald-400/35 px-2.5 py-1.5 text-emerald-300 truncate">
+              $ git config --global user.email &quot;you@example.com&quot;
+            </div>
+            <div className="text-white/85">
+              $ git commit -m &quot;Add hello.txt&quot; → saved cleanly
+            </div>
+          </div>
+        )}
+
+        {situation.screenType === 'git-auth-failed' && (
+          <div className="h-full rounded-lg bg-surface-container-lowest border border-outline-variant/35 p-3.5 flex flex-col justify-between text-[11px]">
+            <div className="rounded border border-primary/40 bg-primary-fixed/15 p-2 flex items-center justify-between gap-2">
+              <span className="font-medium text-on-surface text-[10px]">
+                Sign in with your browser window
+              </span>
+              <span className="px-2 py-0.5 rounded bg-primary text-on-primary text-[10px] font-medium">
+                Authorize
+              </span>
+            </div>
+            <div className="rounded border border-outline-variant/40 bg-surface-container-low/50 p-2 text-[10px] text-on-surface-variant">
+              Or paste a Personal access token (passwords do not work)
+            </div>
+            <div className="rounded bg-[#161b22] text-emerald-300 font-mono text-[10px] px-2.5 py-1.5 text-center">
+              $ git push → main -&gt; main
+            </div>
+          </div>
+        )}
+
+        {situation.screenType === 'git-everything-up-to-date' && (
+          <div className="h-full rounded-lg bg-[#161b22] text-[#e6edf3] border border-outline-variant/40 p-3.5 flex flex-col justify-between font-mono text-[10px]">
+            <div className="text-amber-300">
+              $ git status → check for unsaved changes
+            </div>
+            <div className="rounded bg-white/5 border border-emerald-400/35 px-2.5 py-1.5 text-emerald-300">
+              $ git add . &amp;&amp; git commit -m &quot;Update&quot;
+            </div>
+            <div className="text-white/85">
+              Or if working tree clean → already synced on GitHub
+            </div>
+          </div>
+        )}
+
+        {situation.screenType === 'git-no-upstream-branch' && (
+          <div className="h-full rounded-lg bg-[#161b22] text-[#e6edf3] border border-outline-variant/40 p-3.5 flex flex-col justify-between font-mono text-[10px]">
+            <div className="text-rose-300 truncate">
+              fatal: my-experiment has no upstream branch
+            </div>
+            <div className="rounded bg-white/5 border border-emerald-400/35 px-2.5 py-1.5 text-emerald-300">
+              $ git push -u origin my-experiment
+            </div>
+            <div className="text-white/85">
+              Next time on this branch: just run git push
+            </div>
+          </div>
+        )}
+
+        {situation.screenType === 'git-installer-nothing-opened' && (
+          <div className="h-full rounded-lg bg-white border border-outline-variant/40 p-3 flex flex-col justify-between">
+            <div className="flex items-center gap-2">
+              <span className="px-2 py-0.5 rounded bg-primary/10 text-primary text-[10px] font-medium">
+                Windows key
+              </span>
+              <span className="text-[10px] text-on-surface-variant">
+                Open Start menu search
+              </span>
+            </div>
+            <div className="rounded border border-primary/40 bg-surface-container-low/50 px-2.5 py-1.5 text-[11px] font-medium text-on-surface">
+              Git Bash
+            </div>
+            <div className="rounded bg-[#161b22] text-emerald-300 font-mono text-[10px] px-2.5 py-1.5 flex items-center justify-between">
+              <span>Git Bash · App</span>
+              <span>Click to open →</span>
             </div>
           </div>
         )}

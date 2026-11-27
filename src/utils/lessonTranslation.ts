@@ -327,10 +327,22 @@ export function extractLessonSections(lesson: Lesson): LessonTranslationSection[
       );
     }
 
+    if (c.tip) {
+      const tipEntries: TranslationEntry[] = [];
+      pushIf(tipEntries, 'concept.tip.eyebrow', c.tip.eyebrow);
+      pushIf(tipEntries, 'concept.tip.title', c.tip.title);
+      pushIf(tipEntries, 'concept.tip.text', c.tip.text);
+      addSection('tip', 'concept-tip', c.tip.title, tipEntries);
+    }
+
     const mistakeEntries: TranslationEntry[] = [];
     pushIf(mistakeEntries, 'concept.mistake.eyebrow', c.commonMistake.eyebrow);
     pushIf(mistakeEntries, 'concept.mistake.title', c.commonMistake.title);
     pushIf(mistakeEntries, 'concept.mistake.text', c.commonMistake.text);
+    c.commonMistake.items?.forEach((item, idx) => {
+      pushIf(mistakeEntries, `concept.mistake.item${idx}.title`, item.title);
+      pushIf(mistakeEntries, `concept.mistake.item${idx}.text`, item.text);
+    });
     addSection('mistake', 'concept-mistake', c.commonMistake.title, mistakeEntries);
   }
 
@@ -529,10 +541,23 @@ export function applyTranslatedEntries(
                 text: t['concept.afterMerging.text'] ?? lesson.concept.afterMerging.text,
               }
             : undefined,
+          tip: lesson.concept.tip
+            ? {
+                ...lesson.concept.tip,
+                eyebrow: t['concept.tip.eyebrow'] ?? lesson.concept.tip.eyebrow,
+                title: t['concept.tip.title'] ?? lesson.concept.tip.title,
+                text: t['concept.tip.text'] ?? lesson.concept.tip.text,
+              }
+            : undefined,
           commonMistake: {
+            ...lesson.concept.commonMistake,
             eyebrow: t['concept.mistake.eyebrow'] ?? lesson.concept.commonMistake.eyebrow,
             title: t['concept.mistake.title'] ?? lesson.concept.commonMistake.title,
             text: t['concept.mistake.text'] ?? lesson.concept.commonMistake.text,
+            items: lesson.concept.commonMistake.items?.map((item, idx) => ({
+              title: t[`concept.mistake.item${idx}.title`] ?? item.title,
+              text: t[`concept.mistake.item${idx}.text`] ?? item.text,
+            })),
           },
         }
       : undefined,

@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import express from 'express';
+import { createServer } from 'http';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { GoogleGenAI, ThinkingLevel, Type } from '@google/genai';
@@ -808,6 +809,8 @@ async function startServer() {
     }
   });
 
+  const httpServer = createServer(app);
+
   if (isProduction) {
     const distDir = path.resolve(__dirname, 'dist');
     app.use(express.static(distDir));
@@ -820,13 +823,17 @@ async function startServer() {
       server: {
         middlewareMode: true,
         hmr: false,
+        ws: {
+          server: httpServer,
+        },
+        allowedHosts: true,
       },
       appType: 'spa',
     });
     app.use(vite.middlewares);
   }
 
-  app.listen(PORT, '0.0.0.0', () => {
+  httpServer.listen(PORT, '0.0.0.0', () => {
     console.log(`GitStart server listening on http://localhost:${PORT}`);
   });
 }

@@ -2,6 +2,11 @@ import { ArrowRight, CheckCircle2, Lock, Clock, Calendar, Sparkles } from 'lucid
 import type { Lesson, RoadmapLevel } from '../types/lesson';
 import type { StreakState } from '../utils/streak';
 import type { DueLessonReview } from '../utils/spacedReview';
+import {
+  getLessonLockReason,
+  getLevelUnlockMap,
+  isLessonUnlocked,
+} from '../utils/lessonUnlock';
 import { QuickReviewCard } from './QuickReviewCard';
 
 export interface LessonProgressSummary {
@@ -25,6 +30,7 @@ interface LessonsPageProps {
   onRevisitSection?: (lessonIndex: number, targetId: string) => void;
   onSelectLesson: (index: number) => void;
   onOpenSandbox?: () => void;
+  onOpenFinishScreen?: () => void;
 }
 
 export function LessonsPage({
@@ -40,6 +46,7 @@ export function LessonsPage({
   onRevisitSection,
   onSelectLesson,
   onOpenSandbox,
+  onOpenFinishScreen,
 }: LessonsPageProps) {
   const playableLessons = lessons.filter((lesson) => !lesson.comingSoon);
   const completedCount = playableLessons.filter(
@@ -49,18 +56,10 @@ export function LessonsPage({
   const progressPercent =
     availableTotal > 0 ? Math.round((completedCount / availableTotal) * 100) : 0;
 
-  // Compute sequential unlocking across playable lessons
   const firstUnfinishedIndex = lessons.findIndex(
     (lesson) => !lesson.comingSoon && !progressByLessonId[lesson.id]?.lessonCompleted
   );
-  const lastPlayableIndex = (() => {
-    for (let i = lessons.length - 1; i >= 0; i--) {
-      if (!lessons[i].comingSoon) return i;
-    }
-    return 0;
-  })();
-  const unlockedMaxIndex =
-    firstUnfinishedIndex === -1 ? lastPlayableIndex : firstUnfinishedIndex;
+  const levelUnlockMap = getLevelUnlockMap(levels, lessons, progressByLessonId);
 
   const continueLesson = lessons[continueLessonIndex] ?? playableLessons[0] ?? lessons[0];
   const continuePlayableNumber = Math.max(
@@ -214,11 +213,13 @@ export function LessonsPage({
 
               <div className="flex flex-wrap items-center justify-between gap-2 pt-1 text-xs text-on-surface-variant">
                 <span className="truncate">
-                  {completedCount === availableTotal && availableTotal > 0
-                    ? `Level ${completedLevelsCount} completed · Ready for what’s next`
-                    : hasAnyProgress && continueLesson
-                      ? `Up next: Lesson ${continuePlayableNumber} · ${continueLesson.cardTitle}`
-                      : 'Begin with Level 1 · Lesson 1 whenever you are ready'}
+                  {completedLevelsCount === levels.length && levels.length > 0
+                    ? 'All 5 levels complete · You finished GitStart'
+                    : completedCount === availableTotal && availableTotal > 0
+                      ? `Level ${completedLevelsCount} completed · Ready for what’s next`
+                      : hasAnyProgress && continueLesson
+                        ? `Up next: Lesson ${continuePlayableNumber} · ${continueLesson.cardTitle}`
+                        : 'Begin with Level 1 · Lesson 1 whenever you are ready'}
                 </span>
 
                 {/* Subtle, non-shaming daily streak */}
@@ -233,6 +234,22 @@ export function LessonsPage({
                   )}
                 </span>
               </div>
+
+              {completedLevelsCount === levels.length &&
+                levels.length > 0 &&
+                onOpenFinishScreen && (
+                  <div className="pt-2 border-t border-outline-variant/25">
+                    <button
+                      type="button"
+                      onClick={onOpenFinishScreen}
+                      className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-secondary-container/35 border border-secondary/35 text-on-secondary-container text-xs font-medium hover:bg-secondary-container/55 transition-colors cursor-pointer"
+                    >
+                      <CheckCircle2 className="w-3.5 h-3.5 text-secondary shrink-0" />
+                      <span>You finished GitStart — view summary</span>
+                      <ArrowRight className="w-3.5 h-3.5 shrink-0" />
+                    </button>
+                  </div>
+                )}
             </div>
           </div>
         </div>
@@ -414,7 +431,9 @@ export function LessonsPage({
                   {/* Level Lesson Cards */}
                   <div className={`grid ${gridColsClass} gap-5 lg:gap-6`}>
                     {items.map(({ lesson, globalIndex }, posInLevel) => {
-                      const lessonNum = String(globalIndex + 1).padStart(2, '0');
+                      const playableIndex = playableLessons.findIndex((l) => l.id === lesson.id);
+                      const lessonNumber = (playableIndex >= 0 ? playableIndex : globalIndex) + 1;
+                      const lessonNum = String(lessonNumber).padStart(2, '0');
 
                       // Coming soon card (Levels 2–5 until content is added in lessons.js)
                       if (lesson.comingSoon) {
@@ -467,7 +486,14 @@ export function LessonsPage({
                       // Full interactive lesson card (Level 1 + any future populated lessons)
                       const progress = progressByLessonId[lesson.id];
                       const isCompleted = Boolean(progress?.lessonCompleted);
-                      const isUnlocked = isLevelUnlocked && globalIndex <= unlockedMaxIndex;
+                      const isUnlocked = isLessonUnlocked(
+                        lesson,
+                        globalIndex,
+                        lessons,
+                        progressByLessonId,
+                        levelUnlockMap
+                      );
+                      const lockReason = getLessonLockReason(lesson, lessonNumber, levelUnlockMap);
                       const isNextUp = isLevelUnlocked && globalIndex === firstUnfinishedIndex;
                       const totalSteps = lesson.progressSteps?.length ?? 0;
                       const completedStepsCount = progress?.completedStepIds.length ?? 0;
@@ -560,8 +586,8 @@ export function LessonsPage({
                               >
                                 <span>
                                   {isCompleted
-                                    ? `Review Lesson ${globalIndex + 1}`
-                                    : `Start Lesson ${globalIndex + 1}`}
+                                    ? `Review Lesson ${lessonNumber}`
+                                    : `Start Lesson ${lessonNumber}`}
                                 </span>
                                 <ArrowRight className="w-4 h-4" />
                               </button>
@@ -572,13 +598,7 @@ export function LessonsPage({
                                 className="w-full inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-surface-container-high/60 border border-outline-variant/30 text-xs font-medium text-on-surface-variant cursor-not-allowed whitespace-nowrap"
                               >
                                 <Lock className="w-3.5 h-3.5 shrink-0" />
-                                <span>
-                                  {globalIndex === 7
-                                    ? 'Complete Lesson 7 to unlock'
-                                    : !isLevelUnlocked && prevLevelNumber
-                                      ? `Complete Level ${prevLevelNumber} to unlock`
-                                      : `Complete Lesson ${globalIndex} to unlock`}
-                                </span>
+                                <span>{lockReason}</span>
                               </button>
                             )}
                           </div>

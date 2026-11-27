@@ -16,6 +16,8 @@ import { AskAboutButton } from './AskAboutButton';
 interface GlossaryPageProps {
   lessons: Lesson[];
   unlockedMaxIndex: number;
+  unlockedLessonIds?: Set<string>;
+  lockReasonByLessonId?: Record<string, string>;
   focusedTermKey: string | null;
   onSelectLesson: (lessonIndex: number) => void;
   onBackToLessons: () => void;
@@ -26,6 +28,8 @@ const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 export function GlossaryPage({
   lessons,
   unlockedMaxIndex,
+  unlockedLessonIds,
+  lockReasonByLessonId,
   focusedTermKey,
   onSelectLesson,
   onBackToLessons,
@@ -46,9 +50,17 @@ export function GlossaryPage({
   }, []);
 
   const lessonById = useMemo(() => {
-    const map = new Map<string, { lesson: Lesson; index: number }>();
+    const map = new Map<string, { lesson: Lesson; index: number; playableNumber: number }>();
+    let playableCounter = 0;
     lessons.forEach((lesson, index) => {
-      map.set(lesson.id, { lesson, index });
+      if (!lesson.comingSoon) {
+        playableCounter += 1;
+      }
+      map.set(lesson.id, {
+        lesson,
+        index,
+        playableNumber: lesson.comingSoon ? index + 1 : playableCounter,
+      });
     });
     return map;
   }, [lessons]);
@@ -260,8 +272,13 @@ export function GlossaryPage({
               const isFocused = focusedTermKey === entry.key;
               const lessonMatch = lessonById.get(entry.lessonId);
               const isLessonUnlocked = lessonMatch
-                ? !lessonMatch.lesson.comingSoon && lessonMatch.index <= unlockedMaxIndex
+                ? unlockedLessonIds
+                  ? unlockedLessonIds.has(lessonMatch.lesson.id)
+                  : !lessonMatch.lesson.comingSoon && lessonMatch.index <= unlockedMaxIndex
                 : false;
+              const lockHint =
+                (lessonMatch && lockReasonByLessonId?.[lessonMatch.lesson.id]) ||
+                (lessonMatch ? `complete Lesson ${lessonMatch.playableNumber - 1} to unlock` : '');
 
               return (
                 <article
@@ -290,7 +307,7 @@ export function GlossaryPage({
                         </h2>
                         {lessonMatch && (
                           <span className="font-mono text-[11px] text-on-surface-variant/80 whitespace-nowrap">
-                            Lesson {String(lessonMatch.index + 1).padStart(2, '0')}
+                            Lesson {String(lessonMatch.playableNumber).padStart(2, '0')}
                           </span>
                         )}
                       </div>
@@ -355,7 +372,7 @@ export function GlossaryPage({
                               className="inline-flex items-center gap-1.5 text-xs sm:text-[13px] font-medium text-primary hover:underline cursor-pointer"
                             >
                               <span>
-                                Taught in Lesson {lessonMatch.index + 1}:{' '}
+                                Taught in Lesson {lessonMatch.playableNumber}:{' '}
                                 {lessonMatch.lesson.cardTitle}
                               </span>
                               <ArrowRight className="w-3.5 h-3.5 shrink-0" />
@@ -364,9 +381,8 @@ export function GlossaryPage({
                             <span className="inline-flex items-center gap-1.5 text-xs text-on-surface-variant">
                               <Lock className="w-3.5 h-3.5 shrink-0 text-on-surface-variant/70" />
                               <span>
-                                Taught in Lesson {lessonMatch.index + 1}:{' '}
-                                {lessonMatch.lesson.cardTitle} (complete Lesson{' '}
-                                {lessonMatch.index} to unlock)
+                                Taught in Lesson {lessonMatch.playableNumber}:{' '}
+                                {lessonMatch.lesson.cardTitle} ({lockHint.charAt(0).toLowerCase() + lockHint.slice(1)})
                               </span>
                             </span>
                           )
